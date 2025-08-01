@@ -30,7 +30,7 @@ void shutdownVesselStorage();
 
 //-----------------------------------------------
 bool addVessel(
-    Vessel v  // in: vessel to add
+    const Vessel &v  // in: vessel to add
 );
 // Purpose: Append a new vessel record (alias for createVessel)
 

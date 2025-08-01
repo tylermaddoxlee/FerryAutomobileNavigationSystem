@@ -23,6 +23,7 @@
 #include "ReservationASM.h"
 #include "VesselASM.h"
 #include "SailingCommandProcessor.h"
+#include "MenuUI.h"
 
 using namespace std;
 
@@ -30,11 +31,6 @@ std::tm g_localTime; // global variable for local time
 
 // Add prototype for viewSailingReport
 void viewSailingReport();
-
-// Empty stub for runMainMenu
-void runMainMenu() {
-    // Stub: do nothing
-}
 
 void testOneSailing() {
     std::ofstream New("sailings.dat", std::ios::binary | std::ios::trunc);

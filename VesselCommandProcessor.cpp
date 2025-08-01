@@ -76,7 +76,8 @@ void createVessel()
     if (!promptInt("Enter Total High Lane Capacity (max 3600): ", v.highCap))
         return;  // Go back to main menu after error
 
-    if (!addVessel(v))
+    const Vessel& vesselRef = v;
+    if (!addVessel(vesselRef))
     {
         std::cout << "Error: failed to save vessel.\n";
         runMainMenu();  // Go back to main menu

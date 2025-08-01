@@ -23,6 +23,7 @@
 #include <ctime>
 #include <utility>
 #include "Vessel.h"
+#include "VesselASM.h"
 #include <optional>
 
 using namespace std;
