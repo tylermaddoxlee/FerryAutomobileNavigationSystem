@@ -50,22 +50,6 @@ namespace
         return true;
     }
 
-    //-----------------------------------------------
-    // Function: getCurrentDateTime
-    // Purpose:  Get today's date and time formatted as DD-MM-YY | Time: HH:MM
-    void getCurrentDateTime(char* dateTime)
-    {
-        using namespace std::chrono;
-        
-        // Get current system time
-        auto now = system_clock::now();
-        std::time_t now_c = system_clock::to_time_t(now);
-        
-        std::tm *parts = std::localtime(&now_c);
-
-        // Format: DD-MM-YY | Time: HH:MM
-        std::strftime(dateTime, 20, "%d-%m-%y | Time: %H:%M", parts);
-    }
 }
 
 //-----------------------------------------------
