@@ -22,7 +22,7 @@ int main()
 {
     startup();
 
-    showMainMenu();
+    runMainMenu();
 
     shutdown();
     return 0;
