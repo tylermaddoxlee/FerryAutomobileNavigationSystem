@@ -31,7 +31,7 @@
 #include "Sailing.h"
 #include "ReservationASM.h"
 #include "VesselASM.h"
-
+#include <cstring>
 using namespace std;
 
 static fstream sailingFile;  // Module-scope file handle for sailing storage access

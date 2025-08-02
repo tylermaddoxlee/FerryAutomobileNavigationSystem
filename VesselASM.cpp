@@ -25,6 +25,7 @@
 #include "Vessel.h"
 #include "VesselASM.h"
 #include <optional>
+#include <cstring>
 
 using namespace std;
 

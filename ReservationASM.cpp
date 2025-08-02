@@ -24,7 +24,7 @@
 #include <vector>
 #include "ReservationASM.h"
 #include "Reservation.h"
-
+#include <cstring>
 using namespace std;
 
 //============================================
