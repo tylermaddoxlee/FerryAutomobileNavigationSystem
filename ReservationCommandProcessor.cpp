@@ -79,7 +79,7 @@ void createReservationForRegisteredVehicle()
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Invalid sailing ID provided
     {
-        cout << "Error: Invalid sailing ID\n";
+        cout << "Error: Sailing ID does not exist\n";
         runMainMenu();
         return;
     }
