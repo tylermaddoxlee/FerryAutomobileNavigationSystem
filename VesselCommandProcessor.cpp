@@ -25,6 +25,9 @@ namespace
     bool promptCString(const char* prompt, char* buf, std::size_t maxLen)
     {
         std::cout << prompt;
+        std::cin.clear(); // Clear any error flags
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard previous input
+
         std::cin.getline(buf, maxLen);
         return static_cast<bool>(std::cin);
     }
