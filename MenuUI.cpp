@@ -169,7 +169,7 @@ void showMainMenu()
 {
     // Display main menu options using consistent formatting
     // No input validation needed - this is display-only function
-    std::cout << "[Main Menu]\n";
+    std::cout << "\n[Main Menu]\n";
     std::cout << "-------------------------------------------\n";
     std::cout << "[1] Manage Vessels\n";
     std::cout << "[2] Manage Sailings\n";
