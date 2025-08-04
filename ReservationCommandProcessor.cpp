@@ -173,7 +173,7 @@ void createReservationForUnregisteredVehicle()
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Sailing ID not found in database
     {
-        cout << "Error: Invalid sailing ID\n";
+        cout << "Error: Sailing ID does not exist\n";
         runMainMenu();
         return;
     }
