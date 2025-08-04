@@ -29,6 +29,8 @@ namespace
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard previous input
 
         std::cin.getline(buf, maxLen);
+        if (!std::cin)
+            return false;
         return static_cast<bool>(std::cin);
     }
 
