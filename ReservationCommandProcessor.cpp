@@ -53,7 +53,7 @@ void createReservationForRegisteredVehicle()
     if (!existingVehicleOpt)  // Vehicle not found in registered database
     {
         cout << "Error: License plate not found\n";
-        runMainMenu();
+
         return;
     }
     vehicleRecord = *existingVehicleOpt;  // Extract vehicle data from optional
@@ -71,7 +71,6 @@ void createReservationForRegisteredVehicle()
     if (existingReservationOpt)  // Reservation already exists for this combination
     {
         cout << "Error: A reservation already exists for this vehicle on this sailing.\n";
-        runMainMenu();
         return;
     }
 
@@ -79,8 +78,7 @@ void createReservationForRegisteredVehicle()
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Invalid sailing ID provided
     {
-        cout << "Error: Invalid sailing ID\n";
-        runMainMenu();
+        cout << "Error: Sailing ID does not exist\n";
         return;
     }
     sailingRecord = *sailingOpt;
@@ -101,7 +99,6 @@ void createReservationForRegisteredVehicle()
         else  // No lane has sufficient remaining capacity
         {
             cout << "Error: No sufficient capacity in either lane\n";
-            runMainMenu();
             return;
         }
     } 
@@ -114,7 +111,6 @@ void createReservationForRegisteredVehicle()
         else  // High lane insufficient for tall vehicle
         {
             cout << "Error: Not enough capacity in the high lane\n";
-            runMainMenu();
             return;
         }
     }
@@ -133,7 +129,6 @@ void createReservationForRegisteredVehicle()
     if (!addReservation(newReservation))  // Storage operation failed
     {
         cout << "Error: Reservation could not be created.\n";
-        runMainMenu();
         return;
     }
 
@@ -173,8 +168,7 @@ void createReservationForUnregisteredVehicle()
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Sailing ID not found in database
     {
-        cout << "Error: Invalid sailing ID\n";
-        runMainMenu();
+        cout << "Error: Sailing ID does not exist\n";
         return;
     }
     sailingRecord = *sailingOpt;
@@ -192,7 +186,6 @@ void createReservationForUnregisteredVehicle()
     if (existingReservationOpt)  // Duplicate reservation found
     {
         cout << "Error: A reservation already exists for this vehicle on this sailing.\n";
-        runMainMenu();
         return;
     }
 
@@ -218,7 +211,6 @@ void createReservationForUnregisteredVehicle()
         else  // Neither lane has sufficient capacity
         {
             cout << "Error: No sufficient capacity in either lane\n";
-            runMainMenu();
             return;
         }
     } 
@@ -231,7 +223,6 @@ void createReservationForUnregisteredVehicle()
         else  // High lane insufficient for overheight vehicle
         {
             cout << "Error: Not enough capacity in the high lane\n";
-            runMainMenu();
             return;
         }
     }
@@ -254,7 +245,6 @@ void createReservationForUnregisteredVehicle()
     if (!addReservation(newReservation))  // Storage write failed
     {
         cout << "Error: Reservation could not be created.\n";
-        runMainMenu();
         return;
     }
 
@@ -300,7 +290,6 @@ void createReservation()
         else  // Invalid input provided
         {
             std::cout << "Error: Invalid input\n";
-            runMainMenu();  // Return to main menu on invalid input
             return;
         }
     }
@@ -331,7 +320,6 @@ void cancelReservation()
     if (!reservationOpt)  // Reservation not found in database
     {
         cout << "Error: Reservation not found\n";
-        runMainMenu();
         return;
     }
     Reservation reservationRecord = *reservationOpt;
@@ -340,7 +328,6 @@ void cancelReservation()
     if (reservationRecord.onboard)  // Vehicle already checked in
     {
         cout << "Error: Customer already checked in\n";
-        runMainMenu();
         return;
     }
 
@@ -349,7 +336,6 @@ void cancelReservation()
     if (!sailingOpt)  // Sailing data not found
     {
         cout << "Error: Sailing not found\n";
-        runMainMenu();
         return;
     }
     Sailing sailingRecord = *sailingOpt;
@@ -368,7 +354,6 @@ void cancelReservation()
     if (!deleteReservation(reservationRecord.id))  // Deletion operation failed
     {
         cout << "Error: Reservation could not be deleted.\n";
-        runMainMenu();
         return;
     }
 
@@ -398,7 +383,6 @@ void checkInReservation()
         // Exit condition check
         if (strcmp(licensePlate, "0") == 0)  // User wants to exit check-in process
         {
-            runMainMenu();
             break;
         }
 

@@ -254,6 +254,7 @@ void viewSailingReport()
     }
 
     // Return to main menu after report is complete
+    return;
 }
 
 //-----------------------------------------------
@@ -311,5 +312,6 @@ void findSailingByID()
     else
     {
         return;
+        return;  // Return to the main menu after displaying the sailing info
     }
 }
