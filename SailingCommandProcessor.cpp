@@ -21,7 +21,7 @@
 #include <cstring>  // for strlen
 #include <iomanip>  // for std::put_time
 #include <string>
-
+#include <algorithm>
 //-----------------------------------------------
 // Function: createSailing
 // Purpose:  Prompts user to create a new sailing.
@@ -102,7 +102,15 @@ void createSailing()
     newSailing.HRL = vesselUsed.highCap; // High Remaining Length
     newSailing.reservationsCount = 0;    // Initialize reservations count
 
-
+    auto vesselOpt = getVesselByName(vesselName);
+    if (vesselOpt.has_value()) {
+        Vessel vessel = vesselOpt.value();
+        newSailing.LRL = vessel.lowCap;
+        newSailing.HRL = vessel.highCap;
+    } else {
+        std::cout << "Error: Vessel lookup failed during sailing creation\n";
+        return;
+    }
     if (!addSailing(newSailing))
     {
         std::cout << "Error: Failed to create sailing.\n";
@@ -172,6 +180,7 @@ void viewSailingReport()
 {
     // Retrieve all sailing records from the system
     auto sailings = getAllSailings();  // Assuming this function returns a list of sailings
+    std::reverse(sailings.begin(), sailings.end());
     int totalSailings = sailings.size();
 
     if (totalSailings == 0)
@@ -219,7 +228,7 @@ void viewSailingReport()
                 // Note: CF is remaining / total, displayed with "%" which might be intended as percentage
                 CF = (getRemainingCapacity(s.id).first + getRemainingCapacity(s.id).second) / (v.value().highCap + v.value().lowCap);
             }
-            std::cout << std::setw(1) << (i + 1) << ")  "
+            std::cout << std::setw(1) << (index + 1) << ")  "
                       << std::left  << std::setw(27) << s.vesselName
                       << std::setw(12)   << s.id
                       << std::fixed  << std::right
@@ -317,6 +326,5 @@ void findSailingByID()
     else
     {
         return;
-        return;  // Return to the main menu after displaying the sailing info
     }
 }
