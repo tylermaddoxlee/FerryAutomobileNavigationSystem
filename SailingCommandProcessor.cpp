@@ -102,7 +102,7 @@ void createSailing()
     newSailing.HRL = vesselUsed.highCap; // High Remaining Length
     newSailing.reservationsCount = 0;    // Initialize reservations count
 
-    auto vesselOpt = getVesselByName(vesselName);
+    vesselOpt = getVesselByName(vesselName);
     if (vesselOpt.has_value()) {
         Vessel vessel = vesselOpt.value();
         newSailing.LRL = vessel.lowCap;
@@ -198,7 +198,7 @@ void viewSailingReport()
 
     while (loadMore && totalSailings > index) {
         // Print report header with current date and time
-        std::cout << "[VIEW SAILING REPORT]" << std::endl;
+        std::cout << "\n[VIEW SAILING REPORT]" << std::endl;
         std::cout << std::string(79, '-') << std::endl;
         std::cout << "    Date: " << std::put_time(localTime, "%y-%m-%d") << "      |      Time: " << std::put_time(localTime, "%H:%M") << std::endl;
         std::cout << std::string(79, '-') << std::endl;

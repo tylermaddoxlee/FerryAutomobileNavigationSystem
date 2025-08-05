@@ -145,7 +145,7 @@ void createReservationForRegisteredVehicle()
     sailingRecord.reservationsCount++;  // Increment total reservation counter
 
     // Persist updated sailing data with new capacity and count
-    addSailing(sailingRecord);
+    updateSailing(sailingRecord);
 
     cout << "\nReservation Created.\n";
 }
@@ -263,7 +263,7 @@ void createReservationForUnregisteredVehicle()
     sailingRecord.reservationsCount++;  // Increment reservation counter
 
     // Persist updated sailing data
-    addSailing(sailingRecord);
+    updateSailing(sailingRecord);
 
     cout << "\nReservation Created.\n";
 }
@@ -363,7 +363,7 @@ void cancelReservation()
     sailingRecord.reservationsCount--;  // Decrement reservation counter
 
     // Step 9: Persist updated sailing data with restored capacity
-    addSailing(sailingRecord);
+    updateSailing(sailingRecord);
 
     cout << "\nCancelation Successful\n";
 }

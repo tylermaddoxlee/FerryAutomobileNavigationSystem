@@ -44,6 +44,9 @@ bool deleteSailing(
 // Purpose: Remove a sailing record by ID
 
 //-----------------------------------------------
+bool updateSailing(const Sailing &s);  // in-place update
+
+//-----------------------------------------------
 std::optional<Sailing> getSailingByID(
     const char *id  // in: ID to look up
 );

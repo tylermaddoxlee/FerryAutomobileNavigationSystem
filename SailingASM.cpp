@@ -127,6 +127,23 @@ bool deleteSailing(const char *id)
 }
 
 //------------------------------------------------------------------------
+bool updateSailing(const Sailing &s) {
+    if (!sailingFile.is_open()) return false;
+    sailingFile.clear();
+    sailingFile.seekg(0, std::ios::beg);
+    Sailing temp;
+    while (sailingFile.read(reinterpret_cast<char*>(&temp), sizeof(Sailing))) {
+        auto pos = sailingFile.tellg() - static_cast<std::streamoff>(sizeof(Sailing));
+        if (std::strncmp(temp.id, s.id, sizeof(temp.id)) == 0) {
+            sailingFile.seekp(pos);
+            sailingFile.write(reinterpret_cast<const char*>(&s), sizeof(Sailing));
+            return sailingFile.good();
+        }
+    }
+    return false;  // not found
+}
+
+//------------------------------------------------------------------------
 optional<Sailing> getSailingByID(const char *id)
 // Retrieves a sailing record by its ID.
 // Returns the sailing if found, otherwise nullopt.
