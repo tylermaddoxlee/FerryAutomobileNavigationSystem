@@ -97,7 +97,15 @@ void createSailing()
     strncpy(newSailing.vesselName, vesselName, sizeof(newSailing.vesselName) - 1);
     newSailing.vesselName[sizeof(newSailing.vesselName) - 1] = '\0';
 
-
+    auto vesselOpt = getVesselByName(vesselName);
+    if (vesselOpt.has_value()) {
+        Vessel vessel = vesselOpt.value();
+        newSailing.LRL = vessel.lowCap;
+        newSailing.HRL = vessel.highCap;
+    } else {
+        std::cout << "Error: Vessel lookup failed during sailing creation\n";
+        return;
+    }
     if (!addSailing(newSailing))
     {
         std::cout << "Error: Failed to create sailing.\n";
