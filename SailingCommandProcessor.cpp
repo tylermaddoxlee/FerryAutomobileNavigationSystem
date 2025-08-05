@@ -222,7 +222,7 @@ void viewSailingReport()
                 // Note: CF is remaining / total, displayed with "%" which might be intended as percentage
                 CF = (getRemainingCapacity(s.id).first + getRemainingCapacity(s.id).second) / (v.value().highCap + v.value().lowCap);
             }
-            std::cout << std::setw(1) << (i + 1) << ")  "
+            std::cout << std::setw(1) << (index + 1) << ")  "
                       << std::left  << std::setw(27) << s.vesselName
                       << std::setw(12)   << s.id
                       << std::fixed  << std::right
