@@ -171,7 +171,7 @@ void createReservationForUnregisteredVehicle()
         cout << "Error: Sailing ID does not exist\n";
         return;
     }
-    sailingRecord = *sailingOpt;
+    sailingRecord = sailingOpt.value();
 
     // Step 2: Collect vehicle identification
     cout << "Enter License Plate Number (max 10 characters): ";
@@ -239,6 +239,8 @@ void createReservationForUnregisteredVehicle()
     newReservation.vehicleHeight = tempVehicle.vehicleHeight;  // Use entered dimensions
     strncpy(newReservation.phone, phoneNumber, sizeof(newReservation.phone) - 1);
     newReservation.onboard = false;  // Initial onboard status
+
+    newReservation.expectedReturnDate = {0, 0, 0}; 
     newReservation.reservedLane = assignedLane;  // Calculated lane assignment
 
     // Attempt to store reservation in persistent storage

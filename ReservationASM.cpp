@@ -70,7 +70,7 @@ bool addReservation(const Reservation &r)
         cerr << "Error: reservation file is not open." << endl;
         return false;
     }
-
+    reservationFile.clear();  // Clear any previous EOF or error flags
     // Position write pointer at end for append operation
     reservationFile.seekp(0, ios::end);
 

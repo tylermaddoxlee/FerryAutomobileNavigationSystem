@@ -44,11 +44,13 @@ void createSailing()
     }
 
     // 2) Validate vessel existence
-    if (!getVesselByName(vesselName))
+    auto vesselOpt = getVesselByName(vesselName);
+    if (!vesselOpt.has_value())
     {
         std::cout << "Error: Vessel not found\n";
         return;
     }
+    Vessel vesselUsed = vesselOpt.value();
 
     // 3) Prompt for terminal
     char terminal[4]; // 3 char for ferry code + null terminator
@@ -96,6 +98,9 @@ void createSailing()
     newSailing.id[sizeof(newSailing.id) - 1] = '\0';
     strncpy(newSailing.vesselName, vesselName, sizeof(newSailing.vesselName) - 1);
     newSailing.vesselName[sizeof(newSailing.vesselName) - 1] = '\0';
+    newSailing.LRL = vesselUsed.lowCap;  // Low Remaining Length
+    newSailing.HRL = vesselUsed.highCap; // High Remaining Length
+    newSailing.reservationsCount = 0;    // Initialize reservations count
 
 
     if (!addSailing(newSailing))

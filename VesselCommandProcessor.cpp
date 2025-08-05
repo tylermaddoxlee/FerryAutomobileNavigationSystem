@@ -64,9 +64,18 @@ void createVessel()
               << "-------------------------------------------\n";
 
     Vessel v;
+    // ─── Eat one leftover newline (from previous cin>> or getline) ───
+    if (std::cin.peek() == '\n')
+        std::cin.get();
 
-    if (!promptCString("Enter Vessel Name (max 25 characters): ", v.name, sizeof(v.name)))
+    std::cout << "Enter Vessel Name (max 25 characters): ";
+    std::cin.getline(v.name, sizeof(v.name));
+    if (!std::cin || v.name[0] == '\0')
+    {        
+        std::cin.clear();
+        std::cout << "Error: No vessel name entered\n";
         return;  // Go back to main menu after error
+    }
 
     if (getVesselByName(v.name))
     {
@@ -74,11 +83,30 @@ void createVessel()
         return;
     }
 
-    if (!promptInt("Enter Total Low Lane Capacity (max 3600): ", v.lowCap))
-        return;  // Go back to main menu after error
+    char value[4];
 
-    if (!promptInt("Enter Total High Lane Capacity (max 3600): ", v.highCap))
+    std::cout << "Enter Total Low Lane Capacity (max 3600): ";
+    std::cin >> value;
+    int intValueLow = atoi(value);
+    if (!std::cin || intValueLow < 0 || intValueLow > 3600)
+    {
+        std::cin.clear();
+        std::cout << "Error: Invalid low lane capacity.\n";
         return;  // Go back to main menu after error
+    }
+    v.lowCap = intValueLow;
+
+    
+    std::cout << "Enter Total High Lane Capacity (max 3600): ";
+    std::cin >> value;
+    int intValueHigh = atoi(value);
+    if (!std::cin || intValueHigh < 0 || intValueHigh > 3600)
+    {        
+        std::cin.clear();
+        std::cout << "Error: Invalid high lane capacity.\n";
+        return;  // Go back to main menu after error
+    }
+    v.highCap = intValueHigh;
 
     const Vessel& vesselRef = v;
     if (!addVessel(vesselRef))
