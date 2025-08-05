@@ -74,7 +74,6 @@ void createSailing()
     if (!getVesselByName(vesselName))
     {
         std::cout << "Error: Vessel not found\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
@@ -104,7 +103,6 @@ void createSailing()
     if (getSailingByID(sailingID.c_str()))
     {
         std::cout << "Error: Sailing ID conflict\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
@@ -119,13 +117,11 @@ void createSailing()
     if (!addSailing(newSailing))
     {
         std::cout << "Error: Failed to create sailing.\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     // 8) Confirmation
     std::cout << "Sailing Created\n";
-    runMainMenu();  // Go back to main menu after success
 }
 
 //-----------------------------------------------
@@ -146,34 +142,29 @@ void deleteSailing()
         !isdigit(sailingID[7]) || !isdigit(sailingID[8]))   // Departure Hour must be 2 numeric digits
     {
         std::cout << "Error: Sailing ID not named correctly\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
     // 3) Validate sailing existence
     if (!getSailingByID(sailingID))
     {
         std::cout << "Error: Sailing not found\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
     // 4) Delete reservations associated with the sailing
     if (!deleteReservationsBySailingID(sailingID))
     {
         std::cout << "Error: Failed to delete reservations\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
     // 5) Delete the sailing record
     if (!deleteSailing(sailingID))
     {
         std::cout << "Error: Failed to delete sailing\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     // Confirmation (Updated message as per your request)
     std::cout << "Sailing Canceled\n";
-    runMainMenu();  // Go back to main menu after success
 }
 
 //------------------------------------------------------------------------
@@ -189,7 +180,6 @@ void viewSailingReport()
     if (totalSailings == 0)
     {
         std::cout << "Error: No sailing records found\n";
-        runMainMenu();  // Go back to main menu after error
         return; // No sailings in the system
     }
 
@@ -260,21 +250,19 @@ void viewSailingReport()
             else if (input != 'y')
             {
                 std::cout << "Error: Invalid input, exiting report." << std::endl;
-                runMainMenu();  // Go back to main menu after error
                 return; // Invalid input
             }
 
             if (index >= totalSailings)
             {
                 std::cout << "Error: End of sailing records\n";
-                runMainMenu();  // Go back to main menu after error
                 return; // End of sailing records
             }
         }
     }
 
     // Return to main menu after report is complete
-    runMainMenu();
+    return;
 }
 
 //-----------------------------------------------
@@ -298,7 +286,6 @@ void findSailingByID()
         !isdigit(sailingID[7]) || !isdigit(sailingID[8]))
     {
         std::cout << "Error: Sailing ID not named correctly\n";
-        runMainMenu();  // Return to the main menu after error
         return; // Return to the main menu after error
     }
 
@@ -309,7 +296,6 @@ void findSailingByID()
     if (!sailing)
     {
         std::cout << "Error: No sailings found matching your criteria\n";
-        runMainMenu();  // Return to the main menu after error
         return; // Return to the main menu if not found
     }
 
@@ -330,10 +316,9 @@ void findSailingByID()
     if (choice != 0)
     {
         std::cout << "Error: Invalid input\n";
-        runMainMenu();  // Return to main menu on invalid input
     }
     else
     {
-        runMainMenu();  // Return to the main menu after displaying the sailing info
+        return;  // Return to the main menu after displaying the sailing info
     }
 }
