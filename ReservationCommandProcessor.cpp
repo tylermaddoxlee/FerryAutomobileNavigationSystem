@@ -63,11 +63,11 @@ void createReservationForRegisteredVehicle()
     cin >> sailingID;
 
     // Step 3: Generate composite reservation ID using concatenation algorithm
-    char reservationID[20];  // buffer for combined ID string
+    char reservationID[21] = {0};  // buffer for combined ID string
     snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
 
     // Check for duplicate reservation to prevent double-booking
-    auto existingReservationOpt = getReservationByID(reservationID);
+    auto existingReservationOpt = getReservationByLicenseAndID(reservationID);
     if (existingReservationOpt)  // Reservation already exists for this combination
     {
         cout << "Error: A reservation already exists for this vehicle on this sailing.\n";
@@ -178,7 +178,7 @@ void createReservationForUnregisteredVehicle()
     cin >> licensePlate;
 
     // Step 3: Generate reservation ID and check for duplicates
-    char reservationID[20];
+    char reservationID[21] = {0};  // buffer for combined ID string
     snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
 
     // Prevent double-booking by checking existing reservations
@@ -301,24 +301,31 @@ void createReservation()
 void cancelReservation()
 {
     char licensePlate[11];          // license plate identifier
-    char sailingID[9];              // sailing identifier
+    char sailingID[11];             // sailing identifier (increased size)
 
     // Step 1: Collect reservation identification information
     cout << "\n[DELETE EXISTING RESERVATION]" << endl;
     cout << "-------------------------------------------------------------------------------" << endl;
+    
+    // Clear input buffer
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     cout << "Enter License Plate (max 10 characters): ";
     cin >> licensePlate;
 
-    // Step 2: Collect sailing information
+    // Step 2: Collect sailing information  
     cout << "Enter Sailing ID (format: XXX-DD-HH): ";
     cin >> sailingID;
 
     // Step 3: Generate composite reservation ID for lookup
-    char reservationID[20];
+    char reservationID[21];
     snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
+    
+    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
 
     // Retrieve reservation record using composite key
-    optional<Reservation> reservationOpt = getReservationByID(reservationID);
+    optional<Reservation> reservationOpt = getReservationByLicenseAndID(reservationID);
     if (!reservationOpt)  // Reservation not found in database
     {
         cout << "Error: Reservation not found\n";
@@ -353,7 +360,7 @@ void cancelReservation()
     }
 
     // Step 7: Remove reservation record from persistent storage
-    if (!deleteReservation(reservationRecord.id))  // Deletion operation failed
+    if (!deleteReservation(reservationRecord.licensePlate))  // Deletion operation failed
     {
         cout << "Error: Reservation could not be deleted.\n";
         return;
@@ -372,15 +379,20 @@ void cancelReservation()
 void checkInReservation()
 {
     char licensePlate[11];          // vehicle license plate identifier
-    char sailingID[9];              // sailing identifier
+    char sailingID[11];              // sailing identifier
 
     while (true)  // Loop goal: process multiple check-ins until user exits
     {
         // Step 1: Display check-in interface and collect vehicle information
         cout << "\n[CHECK-IN VEHICLE]" << endl;
         cout << "-------------------------------------------------------------------------------" << endl;
+        
+        // Clear input buffer (same as cancelReservation)
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
         cout << "Enter Vehicle Plate Number (max 10 characters) or [0] to exit: ";
-        cin >> licensePlate;
+        cin.getline(licensePlate, sizeof(licensePlate));
 
         // Exit condition check
         if (strcmp(licensePlate, "0") == 0)  // User wants to exit check-in process
@@ -390,14 +402,20 @@ void checkInReservation()
 
         // Step 2: Collect sailing information for reservation lookup
         cout << "Enter Sailing ID (format: XXX-DD-HH): ";
-        cin >> sailingID;
+        cin.getline(sailingID, sizeof(sailingID));
+
+        // Debug output to verify the values (same as cancelReservation)
+        cout << "Debug - licensePlate: '" << licensePlate << "'" << endl;
+        cout << "Debug - sailingID: '" << sailingID << "'" << endl;
 
         // Step 3: Generate reservation ID for database lookup
-        char reservationID[20];
+        char reservationID[21] = {0};  // buffer for combined ID string
         snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
 
-        // Retrieve reservation using composite key
-        auto reservationOpt = getReservationByID(reservationID);
+        cout << "Debug - reservationID: '" << reservationID << "'" << endl;
+
+        // Retrieve reservation using composite key (same method as cancelReservation)
+        optional<Reservation> reservationOpt = getReservationByLicenseAndID(reservationID);
         if (!reservationOpt)  // Reservation not found
         {
             cout << "Error: Reservation not found\n";
@@ -432,7 +450,7 @@ void checkInReservation()
         cout << "Collect $" << calculatedFare << endl;
 
         // Step 7: Update reservation status to indicate successful check-in
-        if (!setOnboardStatus(reservationRecord.id, true))  // Status update failed
+        if (!setOnboardStatus(reservationID, true))  // Status update failed
         {
             cout << "Error: Failed to update onboard status\n";
             continue;  // Continue to next iteration

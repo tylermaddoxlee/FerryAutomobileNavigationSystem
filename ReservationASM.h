@@ -53,6 +53,11 @@ std::optional<Reservation> getReservationByID(
 //returns optional<Reservation> if found or nullopt otherwise
 
 //-----------------------------------------------
+std::optional<Reservation> getReservationByLicenseAndID(
+    const char* reservationID
+);
+
+//-----------------------------------------------
 double calculateFee(
     const std::string &reservationID  // in: ID to calculate for
 );

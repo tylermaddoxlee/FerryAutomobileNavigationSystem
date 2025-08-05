@@ -20,7 +20,7 @@ enum class Lane {
 };
 
 struct Reservation { //vehicle data + reservation
-    char id[19];             // reservation ID (licensePlate + sailingID + null)    
+    char id[21];             // reservation ID (licensePlate + sailingID + null)    
     char licensePlate[11];   // vehicle plate (max 10 + null)
     char sailingID[10];      // nsailing ID (e.g., XXX-DD-HH + null)
     float vehicleLength;     // 4 bytes (in meters)

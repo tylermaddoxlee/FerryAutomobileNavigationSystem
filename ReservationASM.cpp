@@ -185,7 +185,6 @@ std::optional<Reservation> getReservationByID(const std::string &reservationID)
 
     Reservation tempRecord;
     
-    // Linear search through all records for matching ID
     while (reservationFile.read(reinterpret_cast<char*>(&tempRecord), sizeof(Reservation)))
     {
         if (tempRecord.id == reservationID)  // Found matching reservation
@@ -196,6 +195,34 @@ std::optional<Reservation> getReservationByID(const std::string &reservationID)
 
     return std::nullopt;  // No matching record found
 }
+
+//-----------------------------------------------
+std::optional<Reservation> getReservationByLicenseAndID(const char* reservationID)
+{
+    if (!reservationFile.is_open())
+        return std::nullopt;
+
+    reservationFile.clear();
+    reservationFile.seekg(0, std::ios::beg);
+
+    Reservation tempRecord;
+    
+    while (reservationFile.read(reinterpret_cast<char*>(&tempRecord), sizeof(Reservation)))
+    {
+        // Create composite key from the record using C-style string concatenation
+        char recordCompositeKey[21]; // licensePlate (10) + sailingID (10) + null terminator
+        snprintf(recordCompositeKey, sizeof(recordCompositeKey), "%s%s", 
+                 tempRecord.licensePlate, tempRecord.sailingID);
+        
+        if (strcmp(recordCompositeKey, reservationID) == 0)  // Compare C-style strings
+        {
+            return tempRecord;
+        }
+    }
+
+    return std::nullopt;
+}
+
 
 //-----------------------------------------------
 double calculateFee(const std::string &reservationID, const Date & /*actualReturnDate*/)
