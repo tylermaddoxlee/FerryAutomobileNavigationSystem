@@ -22,39 +22,6 @@
 #include <iomanip>  // for std::put_time
 #include <string>
 
-namespace
-{
-    //-----------------------------------------------
-    // Function: promptCString
-    // Purpose:  Prompt for and read a fixed-length C-string.
-    bool promptCString(const char* prompt, char* buf, std::size_t maxLen)
-    {
-        std::cout << prompt;
-        std::cin.clear(); // Clear any error flags
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard previous input
-
-        std::cin.getline(buf, maxLen);
-        if (!std::cin)
-            return false;
-        return true;
-    }
-
-    //-----------------------------------------------
-    // Function: promptInt
-    // Purpose:  Prompt for an integer and validate it's within an acceptable range.
-    bool promptInt(const char* prompt, int &out)
-    {
-        std::cout << prompt;
-        if (!(std::cin >> out))
-        {
-            return false;
-        }
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
-        return true;
-    }
-
-}
-
 //-----------------------------------------------
 // Function: createSailing
 // Purpose:  Prompts user to create a new sailing.
@@ -62,55 +29,70 @@ void createSailing()
 {
     std::cout << "\n[CREATE NEW SAILING]\n"
               << "-------------------------------------------\n";
+    // ─── Eat one leftover newline (from previous cin>> or getline) ───
+    if (std::cin.peek() == '\n')
+        std::cin.get();
 
     // 1) Prompt for vessel name
-    char vesselName[25];
-    if (!promptCString("Enter Vessel Name (max 25 characters): ", vesselName, sizeof(vesselName)))
-    {
-        return; // EOF or error, exit function
+    char vesselName[26];
+    std::cout << "Enter Vessel Name (max 25 characters): ";
+    std::cin.getline(vesselName, sizeof(vesselName));
+    if (!std::cin || vesselName[0] == '\0') {
+        std::cin.clear();
+        std::cout << "Error: no vessel name entered\n";
+        return;
     }
 
     // 2) Validate vessel existence
     if (!getVesselByName(vesselName))
     {
         std::cout << "Error: Vessel not found\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     // 3) Prompt for terminal
     char terminal[4]; // 3 char for ferry code + null terminator
-    if (!promptCString("Enter Departure Terminal (3 character ferry code): ", terminal, sizeof(terminal)))
-    {
-        return; // EOF or error, exit function
+    std::cout << "Enter Departure Terminal (3 character ferry code): ";
+    std::cin.getline(terminal, sizeof(terminal));
+    if (!std::cin || std::strlen(terminal) != 3) {
+        std::cin.clear();
+        std::cout << "Error: Invalid terminal code\n";
+        return;
     }
 
     // 4) Prompt for departure date
-    int departureDate;
-    if (!promptInt("Enter Departure Date (2 digits): ", departureDate))
-    {
-        return; // Invalid input, exit function
+    char departureDate[3];
+    std::cout << "Enter Departure Date (2 digits): ";
+    std::cin.getline(departureDate, sizeof(departureDate));
+    if (!std::cin || std::strlen(departureDate) != 2 || !isdigit(departureDate[0]) || !isdigit(departureDate[1])) {
+        std::cin.clear();
+        std::cout << "Error: Invalid date format\n";
+        return;
     }
+
 
     // 5) Prompt for departure time
-    int departureTime;
-    if (!promptInt("Enter Departure Time (2 digits): ", departureTime))
-    {
-        return; // Invalid input, exit function
+    char departureTime[3];
+    std::cout << "Enter Departure Time (2 digits): ";
+    std::cin.getline(departureTime, sizeof(departureTime));
+    if (!std::cin || std::strlen(departureTime) != 2 || !isdigit(departureTime[0]) || !isdigit(departureTime[1])) {
+        std::cin.clear();
+        return;
     }
 
+
     // 6) Create the Sailing ID and confirm the sailing does not already exist
-    std::string sailingID = std::string(vesselName) + std::to_string(departureDate) + std::to_string(departureTime);
-    if (getSailingByID(sailingID.c_str()))
+    char sailingID[11];
+    std::snprintf(sailingID, sizeof(sailingID), "%s-%s-%s", terminal, departureDate, departureTime);
+    if (getSailingByID(sailingID))
     {
         std::cout << "Error: Sailing ID conflict\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     // 7) Add new sailing
     Sailing newSailing;
-    strncpy(newSailing.id, sailingID.c_str(), sizeof(newSailing.id) - 1);
+    strncpy(newSailing.id, sailingID, sizeof(newSailing.id) - 1);
     newSailing.id[sizeof(newSailing.id) - 1] = '\0';
     strncpy(newSailing.vesselName, vesselName, sizeof(newSailing.vesselName) - 1);
     newSailing.vesselName[sizeof(newSailing.vesselName) - 1] = '\0';
@@ -119,13 +101,11 @@ void createSailing()
     if (!addSailing(newSailing))
     {
         std::cout << "Error: Failed to create sailing.\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     // 8) Confirmation
     std::cout << "Sailing Created\n";
-    runMainMenu();  // Go back to main menu after success
 }
 
 //-----------------------------------------------
@@ -133,47 +113,50 @@ void createSailing()
 // Purpose:  Deletes an existing sailing based on the sailing ID.
 void deleteSailing()
 {
+    // ─── Eat one leftover newline (from previous cin>> or getline) ───
+    if (std::cin.peek() == '\n')
+        std::cin.get();
+
     // 1) Prompt for sailing ID
     char sailingID[25];
-    if (!promptCString("Enter Sailing ID (format: XXX-DD-HH): ", sailingID, sizeof(sailingID)))
-    {
-        return; // EOF or error, exit function
+    std::cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+    std::cin.getline(sailingID, sizeof(sailingID));
+    if (!std::cin || std::strlen(sailingID) != 9) {
+        std::cin.clear();
+        std::cout << "Error: No sailing ID entered\n";
+        return;
     }
+
     // 2) Validate Sailing ID format (XXX-DD-HH)
-    if (strlen(sailingID) != 10 || 
+    if (strlen(sailingID) != 9 || 
         !isalpha(sailingID[0]) || !isalpha(sailingID[1]) || !isalpha(sailingID[2]) ||  // Terminal ID must be 3 alphabetic characters
         !isdigit(sailingID[4]) || !isdigit(sailingID[5]) ||  // Departure Date must be 2 numeric digits
         !isdigit(sailingID[7]) || !isdigit(sailingID[8]))   // Departure Hour must be 2 numeric digits
     {
         std::cout << "Error: Sailing ID not named correctly\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
     // 3) Validate sailing existence
     if (!getSailingByID(sailingID))
     {
         std::cout << "Error: Sailing not found\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
     // 4) Delete reservations associated with the sailing
     if (!deleteReservationsBySailingID(sailingID))
     {
         std::cout << "Error: Failed to delete reservations\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
     // 5) Delete the sailing record
     if (!deleteSailing(sailingID))
     {
         std::cout << "Error: Failed to delete sailing\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     // Confirmation (Updated message as per your request)
     std::cout << "Sailing Canceled\n";
-    runMainMenu();  // Go back to main menu after success
 }
 
 //------------------------------------------------------------------------
@@ -189,7 +172,6 @@ void viewSailingReport()
     if (totalSailings == 0)
     {
         std::cout << "Error: No sailing records found\n";
-        runMainMenu();  // Go back to main menu after error
         return; // No sailings in the system
     }
 
@@ -260,21 +242,18 @@ void viewSailingReport()
             else if (input != 'y')
             {
                 std::cout << "Error: Invalid input, exiting report." << std::endl;
-                runMainMenu();  // Go back to main menu after error
                 return; // Invalid input
             }
 
             if (index >= totalSailings)
             {
                 std::cout << "Error: End of sailing records\n";
-                runMainMenu();  // Go back to main menu after error
                 return; // End of sailing records
             }
         }
     }
 
     // Return to main menu after report is complete
-    runMainMenu();
 }
 
 //-----------------------------------------------
@@ -292,13 +271,12 @@ void findSailingByID()
     std::cin >> sailingID;
 
     // Check for valid Sailing ID format
-    if (strlen(sailingID) != 10 || 
+    if (strlen(sailingID) != 9 || 
         !isalpha(sailingID[0]) || !isalpha(sailingID[1]) || !isalpha(sailingID[2]) || 
         !isdigit(sailingID[4]) || !isdigit(sailingID[5]) || 
         !isdigit(sailingID[7]) || !isdigit(sailingID[8]))
     {
         std::cout << "Error: Sailing ID not named correctly\n";
-        runMainMenu();  // Return to the main menu after error
         return; // Return to the main menu after error
     }
 
@@ -309,7 +287,6 @@ void findSailingByID()
     if (!sailing)
     {
         std::cout << "Error: No sailings found matching your criteria\n";
-        runMainMenu();  // Return to the main menu after error
         return; // Return to the main menu if not found
     }
 
@@ -323,17 +300,16 @@ void findSailingByID()
               << sailing->HRL << "\n";
 
     // Ask user if they want to return to the main menu
-    std::cout << "Enter [0] to return to Main Menu: ";
+    std::cout << "Enter [0] to return to Sub Menu: ";
     int choice;
     std::cin >> choice;
 
     if (choice != 0)
     {
         std::cout << "Error: Invalid input\n";
-        runMainMenu();  // Return to main menu on invalid input
     }
     else
     {
-        runMainMenu();  // Return to the main menu after displaying the sailing info
+        return;
     }
 }

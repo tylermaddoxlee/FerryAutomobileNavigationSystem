@@ -71,7 +71,6 @@ void createVessel()
     if (getVesselByName(v.name))
     {
         std::cout << "Error: Vessel name already exists.\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
@@ -85,10 +84,8 @@ void createVessel()
     if (!addVessel(vesselRef))
     {
         std::cout << "Error: failed to save vessel.\n";
-        runMainMenu();  // Go back to main menu
         return;
     }
 
     std::cout << "Vessel Created\n";
-    runMainMenu();  // Go back to main menu after success
 }
