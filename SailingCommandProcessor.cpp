@@ -225,9 +225,19 @@ void viewSailingReport()
             auto v = getVesselByName(s.vesselName);
             float CF = 0.0f;
             if (v.has_value()) {
-                // Calculate remaining capacity ratio (CF)
-                // Note: CF is remaining / total, displayed with "%" which might be intended as percentage
-                CF = (getRemainingCapacity(s.id).first + getRemainingCapacity(s.id).second) / (v.value().highCap + v.value().lowCap);
+                // Calculate the total capacity (sum of low and high lanes)
+                float totalCapacity = v.value().lowCap + v.value().highCap;
+
+                // Calculate remaining capacity (including the buffer for each vehicle)
+                float remainingCapacity = getRemainingCapacity(s.id).first + getRemainingCapacity(s.id).second;
+
+                // Subtract the 0.5m buffer from the remaining capacity
+                remainingCapacity -= 0.5 * TV;  // Subtract buffer for all vehicles (TV is the number of vehicles)
+
+                // Calculate capacity factor (CF) and handle the case where totalCapacity is zero
+                if (totalCapacity > 0) {
+                    CF = ((totalCapacity - remainingCapacity) / totalCapacity) * 100;
+                }
             }
             std::cout << std::setw(1) << (index + 1) << ")  "
                       << std::left  << std::setw(27) << s.vesselName
