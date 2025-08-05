@@ -221,7 +221,7 @@ void viewSailingReport()
         for (int i = 0; i < 5 && index < totalSailings; i++, index++) {
             const Sailing &s = sailings[index];
             // Calculate total vehicles reserved for this sailing
-            int TV = s.reservationsCount;
+            int TV = countReservationsBySailing(s.id);
             auto v = getVesselByName(s.vesselName);
             float CF = 0.0f;
             if (v.has_value()) {
