@@ -316,17 +316,55 @@ void findSailingByID()
         return; // Return to the main menu if not found
     }
 
-    // Display the Sailing Information
+    // Display the Sailing Information in the correct format
     std::cout << "\n[SAILING REPORT]\n";
-    std::cout << "-------------------------------------------\n";
-    std::cout << "# Vessel ID  Vessel Name  Sailing ID  Low(m)  High(m)\n";
-    std::cout << "-------------------------------------------\n";
-    std::cout << "[1] " << sailing->id << " " << sailing->vesselName << " " 
-              << sailing->id << " " << sailing->LRL << " " 
-              << sailing->HRL << "\n";
+    std::cout << std::string(79, '-') << std::endl
+              << std::left
+              << std::setw(4)  << "#"
+              << std::setw(27) << "Vessel Name"
+              << std::setw(12) << "Sailing ID"
+              << std::right
+              << std::setw(10) << "LRL(m)"
+              << std::setw(11) << "HRL(m)"
+              << std::setw(6)  << "TV"
+              << std::setw(7)  << "CF"
+              << std::endl
+              << std::string(79, '-') << std::endl;
 
+    // Calculate total vehicles reserved for this sailing (TV = Total Vehicles)
+    int TV = countReservationsBySailing(sailing->id);
+    auto v = getVesselByName(sailing->vesselName);
+    float CF = 0.0f;
+
+    if (v.has_value()) {
+        // Calculate the total capacity (sum of low and high lanes)
+        float totalCapacity = v.value().lowCap + v.value().highCap;
+
+        // Calculate remaining capacity (including the buffer for each vehicle)
+        float remainingCapacity = getRemainingCapacity(sailing->id).first + getRemainingCapacity(sailing->id).second;
+
+        // Subtract the 0.5m buffer from the remaining capacity
+        remainingCapacity -= 0.5 * TV;  // Subtract buffer for all vehicles (TV is the number of vehicles)
+
+        // Calculate capacity factor (CF) and handle the case where totalCapacity is zero
+        if (totalCapacity > 0) {
+            CF = ((totalCapacity - remainingCapacity) / totalCapacity) * 100;
+        }
+    }
+
+    // Output the specific sailing's details (only one sailing will be displayed)
+    std::cout << std::setw(1) << 1 << ")  " // Only one sailing, so always index 1
+              << std::left  << std::setw(27) << sailing->vesselName
+              << std::setw(12)   << sailing->id
+              << std::fixed  << std::right
+              << std::setw(10)   << std::setprecision(1) << sailing->LRL
+              << std::setw(11)   << std::setprecision(1) << sailing->HRL
+              << std::setw(6)    << TV
+              << std::setw(7)    << std::setprecision(1) << CF << "%"
+              << "\n";
+    
     // Ask user if they want to return to the main menu
-    std::cout << "Enter [0] to return to Sub Menu: ";
+    std::cout << "\nEnter [0] to return to Sub Menu: ";
     int choice;
     std::cin >> choice;
 
@@ -338,5 +376,4 @@ void findSailingByID()
     {
         return;
     }
-    
 }

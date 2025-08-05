@@ -327,8 +327,6 @@ void cancelReservation()
     char reservationID[21];
     snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
     
-    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
-
     // Retrieve reservation record using composite key
     optional<Reservation> reservationOpt = getReservationByLicenseAndID(reservationID);
     if (!reservationOpt)  // Reservation not found in database
