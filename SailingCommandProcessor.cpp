@@ -21,7 +21,7 @@
 #include <cstring>  // for strlen
 #include <iomanip>  // for std::put_time
 #include <string>
-
+#include <algorithm>
 //-----------------------------------------------
 // Function: createSailing
 // Purpose:  Prompts user to create a new sailing.
@@ -175,6 +175,7 @@ void viewSailingReport()
 {
     // Retrieve all sailing records from the system
     auto sailings = getAllSailings();  // Assuming this function returns a list of sailings
+    std::reverse(sailings.begin(), sailings.end());
     int totalSailings = sailings.size();
 
     if (totalSailings == 0)
