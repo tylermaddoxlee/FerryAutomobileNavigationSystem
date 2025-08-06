@@ -18,6 +18,7 @@
 #include <cstring>
 #include <fstream>
 
+#include "Utilities.h"
 #include "Sailing.h"
 #include "SailingASM.h"
 #include "ReservationASM.h"
@@ -192,8 +193,7 @@ void testSevenSailings() {
 
 int main() {
 
-    initializeSailingStorage();
-    initializeReservationStorage();
+    startup();
 
     std::time_t now = std::time(nullptr);
     g_localTime = *std::localtime(&now);
@@ -203,9 +203,9 @@ int main() {
     testZeroSailings();
     testSevenSailings();
 
-    shutdownReservationStorage();
-    shutdownSailingStorage();
+    shutdown();
 
+    return 0;
 }
 
 

@@ -60,50 +60,50 @@ namespace
 // Purpose:  Prompt for vessel details and add a new vessel record.
 void createVessel()
 {
-    std::cout << "\n[CREATE NEW VESSEL]\n"
-              << "-------------------------------------------\n";
+    std::cout << "\n\033[94m[\033[1;96mCREATE NEW VESSEL\033[94m]\n"
+              << "\033[94m-------------------------------------------\n\033[0m";
 
     Vessel v;
     // ─── Eat one leftover newline (from previous cin>> or getline) ───
     if (std::cin.peek() == '\n')
         std::cin.get();
 
-    std::cout << "Enter Vessel Name (max 25 characters): ";
+    std::cout << "\033[1;97mEnter Vessel Name (max 25 characters): \033[0m";
     std::cin.getline(v.name, sizeof(v.name));
     if (!std::cin || v.name[0] == '\0')
     {        
         std::cin.clear();
-        std::cout << "Error: No vessel name entered\n";
+        std::cout << "\033[31mError: No vessel name entered\n\033[0m";
         return;  // Go back to main menu after error
     }
 
     if (getVesselByName(v.name))
     {
-        std::cout << "Error: Vessel name already exists.\n";
+        std::cout << "\033[31mError: Vessel name already exists.\n\033[0m";
         return;
     }
 
     char value[4];
 
-    std::cout << "Enter Total Low Lane Capacity (max 3600): "; //Error: Lane capacity must be numeric characters/////////////////////////////////////500
+    std::cout << "\033[1;97mEnter Total Low Lane Capacity (max 3600): \033[0m";
     std::cin >> value;
     int intValueLow = atoi(value);
     if (!std::cin || intValueLow < 0 || intValueLow > 3600)
     {
         std::cin.clear();
-        std::cout << "Error: Invalid low lane capacity.\n";
+        std::cout << "\033[31mError: Invalid low lane capacity.\n\033[0m";
         return;  // Go back to main menu after error
     }
     v.lowCap = intValueLow;
 
-    
-    std::cout << "Enter Total High Lane Capacity (max 3600): "; //Error: Lane capacity must be numeric characters/////////////////////////////////////
+
+    std::cout << "\033[1;97mEnter Total High Lane Capacity (max 3600): \033[0m";
     std::cin >> value;
     int intValueHigh = atoi(value);
     if (!std::cin || intValueHigh < 0 || intValueHigh > 3600)
     {        
         std::cin.clear();
-        std::cout << "Error: Invalid high lane capacity.\n";
+        std::cout << "\033[31mError: Invalid high lane capacity.\n\033[0m";
         return;  // Go back to main menu after error
     }
     v.highCap = intValueHigh;
@@ -111,9 +111,9 @@ void createVessel()
     const Vessel& vesselRef = v;
     if (!addVessel(vesselRef))
     {
-        std::cout << "Error: failed to save vessel.\n";
+        std::cout << "\033[31mError: failed to save vessel.\n\033[0m";
         return;
     }
 
-    std::cout << "\nVessel Created\n";
+    std::cout << "\033[32mVessel Created\n\033[0m";
 }
