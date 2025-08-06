@@ -160,7 +160,7 @@ void createReservationForRegisteredVehicle()
     // Persist updated sailing data with new capacity and count
     updateSailing(sailingRecord);
 
-    cout << "\nReservation Created.\n";
+    cout << "\nReservation Created\n";
 }
 
 //-----------------------------------------------
@@ -298,7 +298,7 @@ void createReservationForUnregisteredVehicle()
         cout << "Warning: Vehicle could not be added to database, but reservation was created successfully.\n";
     }
 
-    cout << "\nReservation Created.\n";
+    cout << "\nReservation Created\n";
 }
 
 //-----------------------------------------------
@@ -308,6 +308,8 @@ void createReservation()
     
     while (true)  // Loop goal: obtain valid yes/no response from user
     {
+        std::cout << "\n[CREATE NEW RESERVATION]" << endl;
+        std::cout << std::string(79, '-') << std::endl;
         std::cout << "Have You Made a Reservation with this License Plate [y/n]: ";
         std::cin >> userResponse;
         userResponse = static_cast<char>(std::tolower(userResponse));  // Convert to lowercase for comparison
@@ -338,7 +340,7 @@ void cancelReservation()
 
     // Step 1: Collect reservation identification information
     cout << "\n[DELETE EXISTING RESERVATION]" << endl;
-    cout << "-------------------------------------------------------------------------------" << endl;
+    std::cout << std::string(79, '-') << std::endl;
     
     // Clear input buffer
     cin.clear();
@@ -420,7 +422,7 @@ void checkInReservation()
     {
         // Step 1: Display check-in interface and collect vehicle information
         cout << "\n[CHECK-IN VEHICLE]" << endl;
-        cout << "-------------------------------------------------------------------------------" << endl;
+        std::cout << std::string(79, '-') << std::endl;
         
         // Clear input buffer (same as cancelReservation)
         cin.clear();

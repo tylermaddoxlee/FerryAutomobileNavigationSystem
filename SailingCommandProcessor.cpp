@@ -170,7 +170,7 @@ void deleteSailing()
     }
 
     // Confirmation (Updated message as per your request)
-    std::cout << "Sailing Canceled\n";
+    std::cout << "\nSailing Canceled\n";
 }
 
 //------------------------------------------------------------------------

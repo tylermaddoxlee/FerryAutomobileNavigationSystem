@@ -85,7 +85,7 @@ void createVessel()
 
     char value[4];
 
-    std::cout << "Enter Total Low Lane Capacity (max 3600): ";
+    std::cout << "Enter Total Low Lane Capacity (max 3600): "; //Error: Lane capacity must be numeric characters/////////////////////////////////////500
     std::cin >> value;
     int intValueLow = atoi(value);
     if (!std::cin || intValueLow < 0 || intValueLow > 3600)
@@ -97,7 +97,7 @@ void createVessel()
     v.lowCap = intValueLow;
 
     
-    std::cout << "Enter Total High Lane Capacity (max 3600): ";
+    std::cout << "Enter Total High Lane Capacity (max 3600): "; //Error: Lane capacity must be numeric characters/////////////////////////////////////
     std::cin >> value;
     int intValueHigh = atoi(value);
     if (!std::cin || intValueHigh < 0 || intValueHigh > 3600)
@@ -115,5 +115,5 @@ void createVessel()
         return;
     }
 
-    std::cout << "Vessel Created\n";
+    std::cout << "\nVessel Created\n";
 }
