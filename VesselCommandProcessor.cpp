@@ -46,7 +46,7 @@ namespace
         std::cout << prompt;
         if (!(std::cin >> out))
         {
-            std::cout << "Error: Lane capacity must be numeric characters.\n";
+            std::cout << "\033[31mError: Lane capacity must be numeric characters.\n\033[0m";
             return false;
         }
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -84,28 +84,25 @@ void createVessel()
         return;
     }
 
-    char value[4];
-
-    std::cout << "\033[1;97mEnter Total Low Lane Capacity (max 3600): \033[0m";
-    std::cin >> value;
-    int intValueLow = atoi(value);
-    if (!std::cin || intValueLow < 0 || intValueLow > 3600)
+    int intValueLow;
+    if (!promptInt("\033[1;97mEnter Total Low Lane Capacity (max 3600): \033[0m", intValueLow) || intValueLow < 0 || intValueLow > 3600)
     {
         std::cin.clear();
-        std::cout << "\033[31mError: Invalid low lane capacity.\n\033[0m";
-        return;  // Go back to main menu after error
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (intValueLow < 0 || intValueLow > 3600)
+            std::cout << "\033[31mError: Invalid low lane capacity.\n\033[0m";
+        return;
     }
     v.lowCap = intValueLow;
 
-
-    std::cout << "\033[1;97mEnter Total High Lane Capacity (max 3600): \033[0m";
-    std::cin >> value;
-    int intValueHigh = atoi(value);
-    if (!std::cin || intValueHigh < 0 || intValueHigh > 3600)
+    int intValueHigh;
+    if (!promptInt("\033[1;97mEnter Total High Lane Capacity (max 3600): \033[0m", intValueHigh) || intValueHigh < 0 || intValueHigh > 3600)
     {        
         std::cin.clear();
-        std::cout << "\033[31mError: Invalid high lane capacity.\n\033[0m";
-        return;  // Go back to main menu after error
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (intValueHigh < 0 || intValueHigh > 3600)
+            std::cout << "\033[31mError: Invalid high lane capacity.\n\033[0m";
+        return;
     }
     v.highCap = intValueHigh;
 

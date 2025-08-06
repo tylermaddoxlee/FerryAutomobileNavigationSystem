@@ -36,6 +36,18 @@
 
 using namespace std;
 
+//------------------------------------------------
+bool isValidSailingID(const char* id) {
+    // Expected format: XXX-DD-HH
+    if (strlen(id) != 9) return false;
+    if (!isalpha(id[0]) || !isalpha(id[1]) || !isalpha(id[2])) return false;
+    if (id[3] != '-') return false;
+    if (!isdigit(id[4]) || !isdigit(id[5])) return false;
+    if (id[6] != '-') return false;
+    if (!isdigit(id[7]) || !isdigit(id[8])) return false;
+    return true;
+}
+
 //-----------------------------------------------
 void createReservationForRegisteredVehicle()
 {
@@ -176,6 +188,12 @@ void createReservationForUnregisteredVehicle()
     cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     cin >> sailingID;
 
+    if (!isValidSailingID(sailingID))  // Validate sailing ID format
+    {
+        cout << "\033[31mError: Sailing ID not named correctly\n\033[0m";
+        return;  // Return to main menu on error
+    }
+
     // Retrieve sailing data to validate sailing exists and check capacity
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Sailing ID not found in database
@@ -201,11 +219,37 @@ void createReservationForUnregisteredVehicle()
         return;
     }
 
-    // Step 4: Collect vehicle dimensions for unregistered vehicle
-    cout << "\033[1;97mEnter Vehicle Length (max 99.9m): \033[0m";
-    cin >> tempVehicle.vehicleLength;
-    cout << "\033[1;97mEnter Vehicle Height (max 9.9m): \033[0m";
-    cin >> tempVehicle.vehicleHeight;
+    // Step 4: Collect vehicle length
+    double length{};
+    std::cout << "\033[1;97mEnter Vehicle Length (max 99.9m): \033[0m";
+    if (!(std::cin >> length)) {
+        // non-numeric
+        std::cin.clear(); // clear error flag
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[1;91mError: Invalid vehicle length\033[0m\n";
+        return;  // go back to Main Menu
+    }
+    if (length < 0.0 || length > 99.9) {
+        std::cout << "\033[1;91mError: Vehicle length must be between 0.0 and 99.9\033[0m\n";
+        return;  // go back to Main Menu
+    }
+    tempVehicle.vehicleLength = static_cast<float>(length);
+
+    // Step 6: Collect vehicle height
+    double height{};
+    std::cout << "\033[1;97mEnter Vehicle Height (max 9.9m): \033[0m";
+    if (!(std::cin >> height)) {
+        // non-numeric
+        std::cin.clear(); // clear error flag
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[1;91mError: Invalid vehicle height\033[0m\n";
+        return;  // go back to Main Menu
+    }
+    if (height < 0.0 || height > 9.9) {
+        std::cout << "\033[1;91mError: Vehicle height must be between 0.0 and 9.9\033[0m\n";
+        return;  // go back to Main Menu
+    }
+    tempVehicle.vehicleHeight = static_cast<float>(height);
 
     // Add 0.5-meter buffer for vehicle length
     float vehicleWithBuffer = tempVehicle.vehicleLength + 0.5;
