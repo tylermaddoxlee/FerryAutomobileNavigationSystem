@@ -61,7 +61,7 @@ namespace
 void createVessel()
 {
     std::cout << "\n\033[94m[\033[1;96mCREATE NEW VESSEL\033[94m]\n"
-              << "\033[94m-------------------------------------------\n\033[0m";
+              << "\033[94m-------------------------------------------------------------------------------\n\033[0m";
 
     Vessel v;
     // ─── Eat one leftover newline (from previous cin>> or getline) ───
@@ -115,5 +115,5 @@ void createVessel()
         return;
     }
 
-    std::cout << "\033[32mVessel Created\n\033[0m";
+    std::cout << "\n\033[32mVessel Created\n\033[0m";
 }

@@ -158,7 +158,7 @@ void createReservationForRegisteredVehicle()
     // Persist updated sailing data with new capacity and count
     updateSailing(sailingRecord);
 
-    cout << "\n\033[32mReservation Created.\n\033[0m";
+    cout << "\n\033[32mReservation Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -294,7 +294,7 @@ void createReservationForUnregisteredVehicle()
         cout << "\033[31mWarning: Vehicle could not be added to database,\033[32m but reservation was created successfully.\n\033[0m";
     }
 
-    cout << "\n\033[32mReservation Created.\n\033[0m";
+    cout << "\n\033[32mReservation Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -304,6 +304,8 @@ void createReservation()
     
     while (true)  // Loop goal: obtain valid yes/no response from user
     {
+        cout << "\n\033[94m[\033[1;96mCREATE NEW RESERVATION\033[94m]\033[0m" << endl;
+        cout << "\033[94m-------------------------------------------------------------------------------" << endl;
         std::cout << "\033[1;97mHave You Made a Reservation with this License Plate [y/n]: \033[0m";
         std::cin >> userResponse;
         userResponse = static_cast<char>(std::tolower(userResponse));  // Convert to lowercase for comparison

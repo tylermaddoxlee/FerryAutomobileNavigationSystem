@@ -175,7 +175,7 @@ void deleteSailing()
     }
 
     // Confirmation (Updated message as per your request)
-    std::cout << "\033[32mSailing Canceled\n\033[0m";
+    std::cout << "\n\033[32mSailing Canceled\n\033[0m";
 }
 
 //------------------------------------------------------------------------
