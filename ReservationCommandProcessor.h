@@ -2,7 +2,8 @@
 /*
     Module: ReservationCommandProcessor.h
     Revision History:
-    Revision 1.3: 2025-07-24 - Updated by Arsh Garcha
+    Revision 2.0: 2025-08-02 – Updated by Arsh Garcha
+    Revision 1.0: 2025-07-24 - Updated by Arsh Garcha
     Purpose:
         Declaration of the ReservationCommandProcessor API for reservation workflows.
 */

@@ -1,6 +1,7 @@
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 /* 
     Revision History:
+    Revision 2.0: 2025-08-01 - Updated by Brandon Landa-Ahn
     Revision 1.0: 2025-07-24 - Original By Brandon Landa-Ahn
     Purpose:
         This module manages vessel data storage in a binary file (vessels.dat).

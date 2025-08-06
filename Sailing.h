@@ -2,6 +2,7 @@
 /*
     Module: Sailing.h
     Revision History:
+    Revision 2.0: 2025-08-02 – Updated by Brandon Landa‑Ahn and Raj Chowdhury
     Revision 1.0: 2025-07-18 - Created by Tyler
     Purpose:
         Defines the Sailing data structure for storage and lookup.

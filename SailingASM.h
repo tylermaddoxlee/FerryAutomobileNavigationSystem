@@ -2,6 +2,7 @@
 /*
     Module: SailingASM.h
     Revision History:
+    Revision 2.0: 2025-08-02 – Updated by Brandon Landa‑Ahn
     Revision 1.0: 2025-07-07 - Original by Brandon Landa-Ahn
     Purpose:
         Declaration of Sailing Abstract Storage Module API.

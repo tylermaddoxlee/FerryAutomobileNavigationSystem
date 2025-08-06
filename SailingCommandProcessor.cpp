@@ -2,8 +2,9 @@
 /*
     Module: SailingCommandProcessor.cpp
     Revision History:
-    Revision 1.0: 2025-07-07 - Created by Brandon Landa-Ahn
+    Revision 3.0: 2025-08-01 - Updated by Tyler Lee and Raj Chowdhury and Brandon Landa‑Ahn
     Revision 2.0: 2025-07-22 - Updated by Arsh Garcha
+    Revision 1.0: 2025-07-07 - Created by Brandon Landa-Ahn
     Purpose:
         Implementation of sailing-related workflows.
 */

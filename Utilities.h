@@ -1,6 +1,7 @@
 // File: Utilities.h
 // Module: Utilities.h
 // Revision History:
+//   Revision 3.0: 2025-08-02 – Updated by Raj Chowdhury
 //   Revision 2.0: 2025-07-22 – Updated by Arsh Garcha
 //   Revision 1.0: 2025-07-07 – Original by Brandon Landa‑Ahn
 // Purpose:

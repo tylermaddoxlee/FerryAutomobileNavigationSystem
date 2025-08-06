@@ -2,6 +2,7 @@
 /*
     Module: ReservationASM.h
     Revision History:
+    Revision 2.0: 2025-08-02 – Updated by Tyler Lee
     Revision 1.0: 2025-07-18 - Original by Tyler Lee
     Purpose:
         Declaration of Reservation Abstract Storage Module API.

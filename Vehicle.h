@@ -2,6 +2,7 @@
 /*
     Module: Vehicle.h
     Revision History:
+    evision 2.0: 2025-07-24 - Updated by Raj Chowdhury
     Revision 1.0: 2025-07-18 - Created by Tyler
     Purpose:
         Defines the Vehicle data structure for storage and lookup.

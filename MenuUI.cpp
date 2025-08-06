@@ -2,6 +2,7 @@
 /*          
     Module: MenuUI.cpp
     Revision History: 
+    Revision 3.0: 2025/08/02 - Original by Brandon Landa-Ahn and Raj Chowdhury
     Revision 2.0: 2025/07/22 - Updated by Arsh Garcha
     Revision 1.0: 2025/07/07 - Original by Team
     Purpose: 

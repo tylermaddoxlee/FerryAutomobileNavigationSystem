@@ -2,8 +2,9 @@
 /*
     Module: SailingCommandProcessor.h
     Revision History:
-    Revision 1.0: 2025-07-07 - Created by Brandon Landa-Ahn
+    Revision 3.0: 2025-08-01 - Updated by Brandon Landa‑Ahn and Raj Chowdhury
     Revision 2.0: 2025-07-22 - Updated by Arsh Garcha
+    Revision 1.0: 2025-07-07 - Created by Brandon Landa-Ah
     Purpose:
         Declaration of SailingCommandProcessor API for sailing workflows.
 */

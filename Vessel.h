@@ -1,7 +1,8 @@
 // File: Vessel.h
 // Module: Vessel.h
 // Revision History:
-//   Revision 1.0: 2025-07-23 – Created by Arsh Garcha
+// Revision 2.0: 2025-08-01 - Updated by Arsh Garcha
+// Revision 1.0: 2025-07-23 – Created by Arsh Garcha
 // Purpose:
 //   Declaration of the Vessel record used for vessel storage and processing.
 
