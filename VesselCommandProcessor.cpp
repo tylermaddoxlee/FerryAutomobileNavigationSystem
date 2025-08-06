@@ -114,5 +114,5 @@ void createVessel()
         return;
     }
 
-    std::cout << "\n\033[32mVessel Created\n\033[0m";
+    std::cout << "\033[32mVessel Created\n\033[0m";
 }

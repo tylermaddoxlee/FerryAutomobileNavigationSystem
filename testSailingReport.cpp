@@ -68,13 +68,13 @@ void testOneSailing() {
     timeStream << std::put_time(&g_localTime, "%H:%M");
 
     string expected =
-            "[VIEW SAILING REPORT]\n"
+            "\n[VIEW SAILING REPORT]\n"
     "-------------------------------------------------------------------------------\n"
-    "    Date: " + dateStream.str() + "      |      Time: " + timeStream.str() + "\n"
+    "     Date: " + dateStream.str() + "      |      Time: " + timeStream.str() + "\n"
     "-------------------------------------------------------------------------------\n"
-    "#   Vessel Name                Sailing ID      LRL(m)     HRL(m)    TV     CF\n"
+    " #   Vessel Name                Sailing ID      LRL(m)     HRL(m)    TV     CF\n"
     "-------------------------------------------------------------------------------\n"
-    "1)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+    " 1)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
     "-------------------------------------------------------------------------------\n";
 
 
@@ -85,7 +85,7 @@ void testOneSailing() {
     } else {
         cout << "\033[31mTest failed: \033[34mSingle \033[31msailing report did not match expected output.\n";
         cout << "Expected:\n" << expected;
-        cout << "Got:\n" << out.str() << endl;
+        cout << "Got:" << out.str() << endl;
     }
 }
 
@@ -162,25 +162,25 @@ void testSevenSailings() {
     string expected =
         "[VIEW SAILING REPORT]\n"
         "-------------------------------------------------------------------------------\n"
-        "    Date: " + dateStream.str() + "      |      Time: " + timeStream.str() + "\n"
+        "     Date: " + dateStream.str() + "      |      Time: " + timeStream.str() + "\n"
         "-------------------------------------------------------------------------------\n"
-        "#   Vessel Name                Sailing ID      LRL(m)     HRL(m)    TV     CF\n"
+        " #   Vessel Name                Sailing ID      LRL(m)     HRL(m)    TV     CF\n"
         "-------------------------------------------------------------------------------\n"
-        "1)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
-        "2)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
-        "3)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
-        "4)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
-        "5)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 1)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 2)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 3)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 4)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 5)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
         "-------------------------------------------------------------------------------\n"
         "Load More? [y/n]: \n"
         "[VIEW SAILING REPORT]\n"
         "-------------------------------------------------------------------------------\n"
-        "    Date: " + dateStream.str() + "      |      Time: " + timeStream.str() + "\n"
+        "     Date: " + dateStream.str() + "      |      Time: " + timeStream.str() + "\n"
         "-------------------------------------------------------------------------------\n"
-        "#   Vessel Name                Sailing ID      LRL(m)     HRL(m)    TV     CF\n"
+        " #   Vessel Name                Sailing ID      LRL(m)     HRL(m)    TV     CF\n"
         "-------------------------------------------------------------------------------\n"
-        "6)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
-        "7)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 6)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
+        " 7)  CCCCcCCCCc                 XXX-DD-HH       1000.0     1000.0     0    0.0%\n"
         "-------------------------------------------------------------------------------\n";
 
     if (out.str() == expected) {

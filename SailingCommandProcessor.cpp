@@ -124,7 +124,7 @@ void createSailing()
     }
 
     // 8) Confirmation
-    std::cout << "\n\033[32mSailing Created\n\033[0m";
+    std::cout << "\033[32mSailing Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -178,7 +178,7 @@ void deleteSailing()
     }
 
     // Confirmation (Updated message as per your request)
-    std::cout << "\n\033[32mSailing Canceled\n\033[0m";
+    std::cout << "\033[32mSailing Canceled\n\033[0m";
 }
 
 //------------------------------------------------------------------------
@@ -213,9 +213,10 @@ void viewSailingReport()
         std::cout << std::string(79, '-') << std::endl;
 
         // Set up table headers with proper alignment
+        std::cout << " ";
         std::cout << std::left
-             << std::setw(5)  << "#"     // Changed from 4 to 5
-             << std::setw(26) << "Vessel Name"  // Changed from 27 to 26
+             << std::setw(4)  << "#"    
+             << std::setw(27) << "Vessel Name" 
              << std::setw(12) << "Sailing ID"
              << std::right
              << std::setw(10) << "LRL(m)"
@@ -247,8 +248,8 @@ void viewSailingReport()
                     CF = ((totalCapacity - remainingCapacity) / totalCapacity) * 100;
                 }
             }
-            std::cout << std::setw(2) << (index + 1) << ")  "  // Changed from setw(1) to setw(2)
-                      << std::left  << std::setw(26) << s.vesselName  // Changed from 27 to 26
+            std::cout << std::setw(2) << (index + 1) << ")  "  
+                      << std::left  << std::setw(27) << s.vesselName  
                       << std::setw(12)   << s.id
                       << std::fixed  << std::right
                       << std::setw(10)   << std::setprecision(1) << s.LRL
@@ -266,7 +267,6 @@ void viewSailingReport()
             std::cout << "\033[1;97mLoad More? [y/n]: \033[0m";
             char input;
             std::cin >> input;
-            std::cout << std::endl;
 
             if (input == 'n')
             {
@@ -274,6 +274,8 @@ void viewSailingReport()
             }
             else if (input != 'y')
             {
+                std::cin.clear();  // Clear error state
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\033[31mError: Invalid input\033[0m" << std::endl;
                 return; // Invalid input
             }
@@ -326,8 +328,9 @@ void findSailingByID()
 
     // Display the Sailing Information in the correct format
     std::cout << "\n\033[32m[SAILING REPORT]\n";
-    std::cout << std::string(79, '-') << std::endl
-              << std::left
+    std::cout << std::string(79, '-') << std::endl;
+    std::cout << " ";
+    std::cout << std::left
               << std::setw(4)  << "#"
               << std::setw(27) << "Vessel Name"
               << std::setw(12) << "Sailing ID"
@@ -361,6 +364,7 @@ void findSailingByID()
     }
 
     // Output the specific sailing's details (only one sailing will be displayed)
+    std::cout << " ";
     std::cout << std::setw(1) << 1 << ")  " // Only one sailing, so always index 1
               << std::left  << std::setw(27) << sailing->vesselName
               << std::setw(12)   << sailing->id
@@ -376,12 +380,11 @@ void findSailingByID()
     int choice;
     std::cin >> choice;
 
-    if (choice != 0)
+    if (!(std::cin >> choice) || choice != 0)
     {
+        std::cin.clear();  // Clear error state
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "\033[31mError: Invalid input\n\033[0m";
     }
-    else
-    {
-        return;
-    }
+    return;
 }

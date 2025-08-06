@@ -74,6 +74,12 @@ void createReservationForRegisteredVehicle()
     cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     cin >> sailingID;
 
+    if (!isValidSailingID(sailingID))  // Validate sailing ID format
+    {
+        cout << "\033[31mError: Sailing ID not named correctly\n\033[0m";
+        return;  // Return to main menu on error
+    }
+
     // Step 3: Retrieve and validate sailing data for capacity checking
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Invalid sailing ID provided
@@ -171,7 +177,7 @@ void createReservationForRegisteredVehicle()
     // Persist updated sailing data with new capacity and count
     updateSailing(sailingRecord);
 
-    cout << "\n\033[32mReservation Created\n\033[0m";
+    cout << "\033[32mReservation Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -339,7 +345,7 @@ void createReservationForUnregisteredVehicle()
         cout << "\033[31mWarning: Vehicle could not be added to database,\033[32m but reservation was created successfully.\n\033[0m";
     }
 
-    cout << "\n\033[32mReservation Created\n\033[0m";
+    cout << "\033[32mReservation Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -367,6 +373,8 @@ void createReservation()
         } 
         else  // Invalid input provided
         {
+            std::cin.clear();  // Clear error state
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "\033[31mError: Invalid input\n\033[0m";
             return;
         }
@@ -448,7 +456,7 @@ void cancelReservation()
     // Step 9: Persist updated sailing data with restored capacity
     updateSailing(sailingRecord);
 
-    cout << "\n\033[32mCancelation Successful\033[0m\n";
+    cout << "\033[32mCancelation Successful\033[0m\n";
 }
 
 //-----------------------------------------------
@@ -526,6 +534,6 @@ void checkInReservation()
             continue;  // Continue to next iteration
         }
 
-        cout << "\n\033[32mCheck-in Successful\033[0m\n";
+        cout << "\033[32mCheck-in Successful\033[0m\n";
     }
 }

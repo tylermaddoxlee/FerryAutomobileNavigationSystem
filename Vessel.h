@@ -14,7 +14,7 @@
 
 //-----------------------------------------------
 // Constants
-static constexpr std::size_t VESSEL_NAME_LEN = 25;  // max characters + null
+static constexpr std::size_t VESSEL_NAME_LEN = 26;  // max characters + null
 
 //-----------------------------------------------
 // Struct:  Vessel

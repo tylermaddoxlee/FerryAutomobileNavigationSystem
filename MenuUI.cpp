@@ -167,7 +167,7 @@ void showMainMenu()
     // No input validation needed - this is display-only function
     std::cout << "\n\033[94m[\033[1;97mMAIN MENU\033[94m]\n";        // Blue brackets, bold bright white text
     std::cout << "\033[94m-------------------------------------------------------------------------------\n";
-    std::cout << "\033[94m[1] \033[96mManage Vessels\n";     // Blue digits/brackets, cyan text
+    std::cout << "\033[94m[1] \033[96mCreate Vessels\n";     // Blue digits/brackets, cyan text
     std::cout << "\033[94m[2] \033[96mManage Sailings\n";   // Blue digits/brackets, cyan text
     std::cout << "\033[94m[3] \033[96mManage Reservations\n"; // Blue digits/brackets, cyan text
     std::cout << "\033[94m[4] \033[96mCheck-in Vehicle\n";   // Blue digits/brackets, cyan text
