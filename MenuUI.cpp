@@ -27,19 +27,16 @@ int getMenuSelection(int min, int max)
     int choice = -1;
     while (true)
     {
-        std::cout << "\033[1;97mChoose an option [0-5] and press ENTER: \033[0m";
-        
-        if (!(std::cin >> choice))  // Check if input extraction failed (non-integer)
-        {
-            std::cin.clear();  // Reset stream error flags
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Discard invalid input
-            std::cout << "\033[31mInvalid input. Please enter a number.\n\033[0m";
-            continue;  // Retry input
+        std::cout << "Choose an option ["<<min<<"-"<<max<<"] and press ENTER: ";
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
         }
         if (choice >= min && choice <= max)
             return choice;
-
-        std::cout << "\033[31mChoice must be between 0 and 5. Try again.\n\033[0m";
+        std::cout << "Choice must be between " << min << " and " << max << ". Try again.\n";
     }
 }
 
@@ -50,13 +47,13 @@ void showSailingSubMenu()
     
     while (!exitSubmenu)  // Loop goal: display sailing submenu until user exits
     {
-        std::cout << "\n\033[94m[\033[1;96mMANAGE SAILINGS\033[94m]\n";
-        std::cout << "\033[94m-------------------------------------------\n";
-        std::cout << "\033[94m[1] \033[1;96mCreate New Sailing\n";
-        std::cout << "\033[94m[2] \033[1;96mDelete Existing Sailings\n";
-        std::cout << "\033[94m[3] \033[1;96mSearch Sailing by ID\n";
-        std::cout << "\033[94m[0] \033[1;96mExit to Main Menu\n";
-        std::cout << "\033[94m-------------------------------------------\n\033[0m";
+        std::cout << "\n[MANAGE SAILINGS]\n";
+        std::cout << std::string(79, '-') << std::endl;
+        std::cout << "[1] Create New Sailing\n";
+        std::cout << "[2] Delete Existing Sailings\n";
+        std::cout << "[3] Search Sailing by ID\n";
+        std::cout << "[0] Exit to Main Menu\n";
+        std::cout << std::string(79, '-') << std::endl;
         
         int userChoice = getMenuSelection(0, 3);  // validated user selection
         
@@ -75,7 +72,7 @@ void showSailingSubMenu()
                 exitSubmenu = true;  // Set flag to exit submenu loop
                 break;
             default:
-                std::cout << "\033[31mInvalid choice. Try again.\n\033[0m";
+                std::cout << "Invalid choice. Try again.\n";
                 break;
         }
     }
@@ -88,12 +85,12 @@ void showReservationSubMenu()
     
     while (!exitSubmenu)  // Loop goal: display reservation submenu until user exits
     {
-        std::cout << "\n\033[94m[\033[1;96mMANAGE RESERVATIONS\033[94m]\n";
-        std::cout << "\033[94m-------------------------------------------\n";
-        std::cout << "\033[94m[1] \033[1;96mCreate New Reservation\n";
-        std::cout << "\033[94m[2] \033[1;96mDelete Existing Reservation\n";
-        std::cout << "\033[94m[0] \033[1;96mExit to Main Menu\n";
-        std::cout << "\033[94m-------------------------------------------\n\033[0m";
+        std::cout << "\n[MANAGE RESERVATIONS]\n";
+        std::cout << std::string(79, '-') << std::endl;
+        std::cout << "[1] Create New Reservation\n";
+        std::cout << "[2] Delete Existing Reservation\n";
+        std::cout << "[0] Exit to Main Menu\n";
+        std::cout << std::string(79, '-') << std::endl;
         
         int userChoice = getMenuSelection(0, 2);  // validated menu selection
         
@@ -109,7 +106,7 @@ void showReservationSubMenu()
                 exitSubmenu = true;  // Exit reservation submenu
                 break;
             default:
-                std::cout << "\033[31mInvalid choice. Try again.\n\033[0m";
+                std::cout << "Invalid choice. Try again.\n";
                 break;
         }
     }
@@ -141,7 +138,7 @@ void handleMenuSelection(int choice)
             // Exit case: no action needed, handled by caller
             break;
         default:
-            std::cout << "\033[31mInvalid choice.\n\033[0m";  // Should not occur due to validation
+            std::cout << "Invalid choice.\n";  // Should not occur due to validation
     }
 }
 
@@ -165,13 +162,15 @@ void runMainMenu()
 //-----------------------------------------------
 void showMainMenu()
 {
-    std::cout << "\n\033[94m[\033[1;97mMain Menu\033[94m]\n";        // Blue brackets, bold bright white text
-    std::cout << "\033[94m-------------------------------------------\n";  // Blue lines
-    std::cout << "\033[94m[1] \033[96mManage Vessels\n";     // Blue digits/brackets, cyan text
-    std::cout << "\033[94m[2] \033[96mManage Sailings\n";   // Blue digits/brackets, cyan text
-    std::cout << "\033[94m[3] \033[96mManage Reservations\n"; // Blue digits/brackets, cyan text
-    std::cout << "\033[94m[4] \033[96mCheck-in Vehicle\n";   // Blue digits/brackets, cyan text
-    std::cout << "\033[94m[5] \033[96mView Sailing Report\n"; // Blue digits/brackets, cyan text
-    std::cout << "\033[94m[0] \033[96mQuit\n";        // Blue digits/brackets, cyan text
-    std::cout << "\033[94m-------------------------------------------\033[0m\n";  // Blue lines, reset color
+    // Display main menu options using consistent formatting
+    // No input validation needed - this is display-only function
+    std::cout << "\n[MAIN MENU]\n";
+    std::cout << std::string(79, '-') << std::endl;
+    std::cout << "[1] Manage Vessels\n";
+    std::cout << "[2] Manage Sailings\n";
+    std::cout << "[3] Manage Reservations\n";
+    std::cout << "[4] Check-in Vehicle\n";
+    std::cout << "[5] View Sailing Report\n";
+    std::cout << "[0] Quit\n";
+    std::cout << std::string(79, '-') << std::endl;
 }
