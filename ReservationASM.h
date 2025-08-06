@@ -47,7 +47,7 @@ bool deleteReservationsBySailingID(
 
 //-----------------------------------------------
 std::optional<Reservation> getReservationByID(
-    const std::string &id  // in: ID to look up
+    const char* reservationID  // in: ID to look up
 );
 //find reservation id by license plate
 //returns optional<Reservation> if found or nullopt otherwise
@@ -92,5 +92,12 @@ double checkInAndCalcFee(
 //-----------------------------------------------
 int countReservationsBySailing(
     const char* targetID  // target Sailing ID to count
+);
+
+//------------------------------------------------
+void makeReservationID(
+    const char* licensePlate,
+    const char* sailingID,
+    char outID[21]
 );
 #endif // RESERVATION_ASM_H

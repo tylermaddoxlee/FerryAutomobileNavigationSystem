@@ -77,7 +77,7 @@ bool addReservation(const Reservation &r)
     // Write entire Reservation struct as binary data block
     // Uses reinterpret_cast to convert struct pointer to char* for binary write
     reservationFile.write(reinterpret_cast<const char*>(&r), sizeof(Reservation));
-
+    reservationFile.flush();
     // Return success status based on stream state
     return reservationFile.good();
 }
@@ -175,7 +175,7 @@ bool deleteReservationsBySailingID(const std::string &sailingID)
 }
 
 //-----------------------------------------------
-std::optional<Reservation> getReservationByID(const std::string &reservationID)
+std::optional<Reservation> getReservationByID(const char* reservationID)
 {
     if (!reservationFile.is_open())  // Validate file accessibility
         return std::nullopt;
@@ -187,7 +187,7 @@ std::optional<Reservation> getReservationByID(const std::string &reservationID)
     
     while (reservationFile.read(reinterpret_cast<char*>(&tempRecord), sizeof(Reservation)))
     {
-        if (tempRecord.id == reservationID)  // Found matching reservation
+        if (strncmp(tempRecord.id, reservationID, sizeof(tempRecord.id)) == 0)  // Found matching reservation
         {
             return tempRecord;  // Return copy of found record
         }
@@ -227,7 +227,7 @@ std::optional<Reservation> getReservationByLicenseAndID(const char* reservationI
 //-----------------------------------------------
 double calculateFee(const std::string &reservationID, const Date & /*actualReturnDate*/)
 {
-    auto reservationOption = getReservationByID(reservationID);
+    auto reservationOption = getReservationByID(reservationID.c_str());
     if (!reservationOption.has_value()) return -1.0;  // Reservation not found
 
     // Fee structure constants based on business rules
@@ -272,7 +272,7 @@ bool setOnboardStatus(const std::string &reservationID, bool onboardStatus)
     {
         streampos recordPosition = reservationFile.tellg() - static_cast<streamoff>(sizeof(Reservation));
         
-        if (reservationID == recordBuffer.licensePlate)  // Found target record
+        if (strncmp(recordBuffer.id, reservationID.c_str(), sizeof(recordBuffer.id)) == 0)  // Found target record
         {
             recordBuffer.onboard = onboardStatus;  // Update onboard flag
 
@@ -349,3 +349,31 @@ int countReservationsBySailing(const char* targetSailingID)
 
     return matchingCount;
 }
+
+//-----------------------------------------------
+// helper: build a 20-char ID padded with '1' + '\0'
+void makeReservationID(const char* licensePlate,
+                       const char* sailingID,
+                       char outID[21])
+{
+    // 1) write plate+sailing (snprintf always NUL-terminates if size>=1)
+    int written = snprintf(outID,
+                           21,
+                           "%s%s",
+                           licensePlate,
+                           sailingID);
+    if (written < 0 || written >= 20) {
+        // handle error: either snprintf failed, or overflowed.
+        // e.g. set outID[0]='\0' or throw, or print error and return.
+        outID[0] = '\0';
+        return;
+    }
+
+    // 2) pad with '1' up to index 19
+    for (int i = written; i < 20; ++i) {
+        outID[i] = '*';
+    }
+    // 3) ensure NUL
+    outID[20] = '\0';
+}
+// --------------------------------------

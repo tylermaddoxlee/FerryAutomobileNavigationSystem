@@ -67,7 +67,7 @@ void createReservationForRegisteredVehicle()
     snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
 
     // Check for duplicate reservation to prevent double-booking
-    auto existingReservationOpt = getReservationByLicenseAndID(reservationID);
+    auto existingReservationOpt = getReservationByID(reservationID);
     if (existingReservationOpt)  // Reservation already exists for this combination
     {
         cout << "Error: A reservation already exists for this vehicle on this sailing.\n";
@@ -156,7 +156,7 @@ void createReservationForUnregisteredVehicle()
     Vehicle tempVehicle;            // temporary vehicle record for unregistered vehicle
     Reservation newReservation;     // reservation to be created
     Sailing sailingRecord;          // sailing data for capacity validation
-    char sailingID[9];              // sailing identifier
+    char sailingID[11];              // sailing identifier
     char licensePlate[11];          // vehicle license plate
     char phoneNumber[15];           // contact phone number
 
@@ -178,8 +178,10 @@ void createReservationForUnregisteredVehicle()
     cin >> licensePlate;
 
     // Step 3: Generate reservation ID and check for duplicates
-    char reservationID[21] = {0};  // buffer for combined ID string
-    snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
+    char reservationID[21];
+    makeReservationID(licensePlate, sailingID, reservationID);
+
+    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
 
     // Prevent double-booking by checking existing reservations
     auto existingReservationOpt = getReservationByID(reservationID);
@@ -320,12 +322,12 @@ void cancelReservation()
 
     // Step 3: Generate composite reservation ID for lookup
     char reservationID[21];
-    snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
-    
+    makeReservationID(licensePlate, sailingID, reservationID);
+
     cout << "Debug - reservationID: '" << reservationID << "'" << endl;
 
     // Retrieve reservation record using composite key
-    optional<Reservation> reservationOpt = getReservationByLicenseAndID(reservationID);
+    optional<Reservation> reservationOpt = getReservationByID(reservationID);
     if (!reservationOpt)  // Reservation not found in database
     {
         cout << "Error: Reservation not found\n";
@@ -392,7 +394,7 @@ void checkInReservation()
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         cout << "Enter Vehicle Plate Number (max 10 characters) or [0] to exit: ";
-        cin.getline(licensePlate, sizeof(licensePlate));
+        cin >> licensePlate;
 
         // Exit condition check
         if (strcmp(licensePlate, "0") == 0)  // User wants to exit check-in process
@@ -402,20 +404,20 @@ void checkInReservation()
 
         // Step 2: Collect sailing information for reservation lookup
         cout << "Enter Sailing ID (format: XXX-DD-HH): ";
-        cin.getline(sailingID, sizeof(sailingID));
+        cin >> sailingID;
 
         // Debug output to verify the values (same as cancelReservation)
         cout << "Debug - licensePlate: '" << licensePlate << "'" << endl;
         cout << "Debug - sailingID: '" << sailingID << "'" << endl;
 
         // Step 3: Generate reservation ID for database lookup
-        char reservationID[21] = {0};  // buffer for combined ID string
-        snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
+        char reservationID[21];
+        makeReservationID(licensePlate, sailingID, reservationID);
 
         cout << "Debug - reservationID: '" << reservationID << "'" << endl;
 
         // Retrieve reservation using composite key (same method as cancelReservation)
-        optional<Reservation> reservationOpt = getReservationByLicenseAndID(reservationID);
+        optional<Reservation> reservationOpt = getReservationByID(reservationID);
         if (!reservationOpt)  // Reservation not found
         {
             cout << "Error: Reservation not found\n";
