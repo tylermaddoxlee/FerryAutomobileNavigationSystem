@@ -47,6 +47,15 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "algorithm": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__hash_table": "cpp",
+        "__node_handle": "cpp",
+        "deque": "cpp",
+        "memory": "cpp",
+        "forward_list": "cpp",
+        "print": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "unordered_map": "cpp"
     }
 }
