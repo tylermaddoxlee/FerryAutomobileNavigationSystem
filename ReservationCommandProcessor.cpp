@@ -45,27 +45,27 @@ void createReservationForRegisteredVehicle()
     char licensePlate[11];          // vehicle license plate number
 
     // Step 1: Collect license plate and validate vehicle registration
-    cout << "Enter License Plate Number (max 10 characters): ";
+    cout << "\033[1;97mEnter License Plate Number (max 10 characters): \033[0m";
     cin >> licensePlate;
 
     // Perform database lookup to retrieve existing vehicle information
     auto existingVehicleOpt = getVehicleByLicensePlate(licensePlate);
     if (!existingVehicleOpt)  // Vehicle not found in registered database
     {
-        cout << "Error: License plate not found\n";
+        cout << "\033[31mError: License plate not found\n\033[0m";
         return;
     }
     vehicleRecord = *existingVehicleOpt;  // Extract vehicle data from optional
 
     // Step 2: Collect sailing information and validate sailing exists
-    cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+    cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     cin >> sailingID;
 
     // Step 3: Retrieve and validate sailing data for capacity checking
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Invalid sailing ID provided
     {
-        cout << "Error: Sailing ID does not exist\n";
+        cout << "\033[31mError: Sailing ID does not exist\n\033[0m";
         return;
     }
     sailingRecord = *sailingOpt;
@@ -74,13 +74,11 @@ void createReservationForRegisteredVehicle()
     char reservationID[21];
     makeReservationID(licensePlate, sailingID, reservationID);
 
-    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
-
     // Check for duplicate reservation to prevent double-booking
     auto existingReservationOpt = getReservationByID(reservationID);
     if (existingReservationOpt)  // Reservation already exists for this combination
     {
-        cout << "Error: A reservation already exists for this vehicle on this sailing.\n";
+        cout << "\033[31mError: A reservation already exists for this vehicle on this sailing.\n\033[0m";
         return;
     }
 
@@ -102,7 +100,7 @@ void createReservationForRegisteredVehicle()
         } 
         else  // No lane has sufficient remaining capacity
         {
-            cout << "Error: No sufficient capacity in either lane\n";
+            cout << "\033[31mError: No sufficient capacity in either lane\n\033[0m";
             return;
         }
     } 
@@ -114,7 +112,7 @@ void createReservationForRegisteredVehicle()
         } 
         else  // High lane insufficient for tall vehicle
         {
-            cout << "Error: Not enough capacity in the high lane\n";
+            cout << "\033[31mError: Not enough capacity in the high lane\n\033[0m";
             return;
         }
     }
@@ -141,7 +139,7 @@ void createReservationForRegisteredVehicle()
     // Attempt to persist reservation to storage
     if (!addReservation(newReservation))  // Storage operation failed
     {
-        cout << "Error: Reservation could not be created.\n";
+        cout << "\033[31mError: Reservation could not be created.\n\033[0m";
         return;
     }
 
@@ -160,7 +158,7 @@ void createReservationForRegisteredVehicle()
     // Persist updated sailing data with new capacity and count
     updateSailing(sailingRecord);
 
-    cout << "\nReservation Created.\n";
+    cout << "\n\033[32mReservation Created.\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -174,40 +172,38 @@ void createReservationForUnregisteredVehicle()
     char phoneNumber[13];           // contact phone number
 
     // Step 1: Collect and validate sailing information first
-    cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+    cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     cin >> sailingID;
 
     // Retrieve sailing data to validate sailing exists and check capacity
     auto sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Sailing ID not found in database
     {
-        cout << "Error: Sailing ID does not exist\n";
+        cout << "\033[31mError: Sailing ID does not exist\n\033[0m";
         return;
     }
     sailingRecord = sailingOpt.value();
 
     // Step 2: Collect vehicle identification
-    cout << "Enter License Plate Number (max 10 characters): ";
+    cout << "\033[1;97mEnter License Plate Number (max 10 characters): \033[0m";
     cin >> licensePlate;
 
     // Step 3: Generate reservation ID and check for duplicates
     char reservationID[21];
     makeReservationID(licensePlate, sailingID, reservationID);
 
-    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
-
     // Prevent double-booking by checking existing reservations
     auto existingReservationOpt = getReservationByID(reservationID);
     if (existingReservationOpt)  // Duplicate reservation found
     {
-        cout << "Error: A reservation already exists for this vehicle on this sailing.\n";
+        cout << "\033[31mError: A reservation already exists for this vehicle on this sailing.\n\033[0m";
         return;
     }
 
     // Step 4: Collect vehicle dimensions for unregistered vehicle
-    cout << "Enter Vehicle Length (max 99.9m): ";
+    cout << "\033[1;97mEnter Vehicle Length (max 99.9m): \033[0m";
     cin >> tempVehicle.vehicleLength;
-    cout << "Enter Vehicle Height (max 9.9m): ";
+    cout << "\033[1;97mEnter Vehicle Height (max 9.9m): \033[0m";
     cin >> tempVehicle.vehicleHeight;
 
     // Add 0.5-meter buffer for vehicle length
@@ -228,7 +224,7 @@ void createReservationForUnregisteredVehicle()
         } 
         else  // Neither lane has sufficient capacity
         {
-            cout << "Error: No sufficient capacity in either lane\n";
+            cout << "\033[31mError: No sufficient capacity in either lane\n\033[0m";
             return;
         }
     } 
@@ -240,13 +236,13 @@ void createReservationForUnregisteredVehicle()
         } 
         else  // High lane insufficient for overheight vehicle
         {
-            cout << "Error: Not enough capacity in the high lane\n";
+            cout << "\033[31mError: Not enough capacity in the high lane\n\033[0m";
             return;
         }
     }
 
     // Step 6: Collect contact information for unregistered vehicle
-    cout << "Enter Phone Number (max 14 characters): ";
+    cout << "\033[1;97mEnter Phone Number (max 14 characters): \033[0m";
     cin >> phoneNumber;
 
     // Step 7: Construct reservation record with collected data
@@ -264,7 +260,7 @@ void createReservationForUnregisteredVehicle()
     // Attempt to store reservation in persistent storage
     if (!addReservation(newReservation))  // Storage write failed
     {
-        cout << "Error: Reservation could not be created.\n";
+        cout << "\033[31mError: Reservation could not be created.\n\033[0m";
         return;
     }
 
@@ -295,10 +291,10 @@ void createReservationForUnregisteredVehicle()
     // Add vehicle to database (ignore failure - reservation is already created)
     if (!addVehicle(tempVehicle))
     {
-        cout << "Warning: Vehicle could not be added to database, but reservation was created successfully.\n";
+        cout << "\033[31mWarning: Vehicle could not be added to database,\033[32m but reservation was created successfully.\n\033[0m";
     }
 
-    cout << "\nReservation Created.\n";
+    cout << "\n\033[32mReservation Created.\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -308,7 +304,7 @@ void createReservation()
     
     while (true)  // Loop goal: obtain valid yes/no response from user
     {
-        std::cout << "Have You Made a Reservation with this License Plate [y/n]: ";
+        std::cout << "\033[1;97mHave You Made a Reservation with this License Plate [y/n]: \033[0m";
         std::cin >> userResponse;
         userResponse = static_cast<char>(std::tolower(userResponse));  // Convert to lowercase for comparison
 
@@ -324,7 +320,7 @@ void createReservation()
         } 
         else  // Invalid input provided
         {
-            std::cout << "Error: Invalid input\n";
+            std::cout << "\033[31mError: Invalid input\n\033[0m";
             return;
         }
     }
@@ -337,31 +333,29 @@ void cancelReservation()
     char sailingID[11];             // sailing identifier (increased size)
 
     // Step 1: Collect reservation identification information
-    cout << "\n[DELETE EXISTING RESERVATION]" << endl;
-    cout << "-------------------------------------------------------------------------------" << endl;
+    cout << "\n\033[94m[\033[1;96mDELETE EXISTING RESERVATION\033[94m]\033[0m" << endl;
+    cout << "\033[94m-------------------------------------------------------------------------------" << endl;
     
     // Clear input buffer
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    
-    cout << "Enter License Plate (max 10 characters): ";
+
+    cout << "\033[1;97mEnter License Plate (max 10 characters): \033[0m";
     cin >> licensePlate;
 
-    // Step 2: Collect sailing information  
-    cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+    // Step 2: Collect sailing information
+    cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     cin >> sailingID;
 
     // Step 3: Generate composite reservation ID for lookup
     char reservationID[21];
     makeReservationID(licensePlate, sailingID, reservationID);
 
-    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
-
     // Retrieve reservation record using composite key
     optional<Reservation> reservationOpt = getReservationByID(reservationID);
     if (!reservationOpt)  // Reservation not found in database
     {
-        cout << "Error: Reservation not found\n";
+        cout << "\033[31mError: Reservation not found\n\033[0m";
         return;
     }
     Reservation reservationRecord = *reservationOpt;
@@ -369,7 +363,7 @@ void cancelReservation()
     // Step 4: Business rule validation - prevent cancellation after check-in
     if (reservationRecord.onboard)  // Vehicle already checked in
     {
-        cout << "Error: Customer already checked in\n";
+        cout << "\033[31mError: Customer already checked in\n\033[0m";
         return;
     }
 
@@ -377,7 +371,7 @@ void cancelReservation()
     optional<Sailing> sailingOpt = getSailingByID(sailingID);
     if (!sailingOpt)  // Sailing data not found
     {
-        cout << "Error: Sailing not found\n";
+        cout << "\033[31mError: Sailing not found\n\033[0m";
         return;
     }
     Sailing sailingRecord = *sailingOpt;
@@ -397,7 +391,7 @@ void cancelReservation()
     // Step 7: Remove reservation record from persistent storage
     if (!deleteReservation(reservationRecord.licensePlate))  // Deletion operation failed
     {
-        cout << "Error: Reservation could not be deleted.\n";
+        cout << "\033[31mError: Reservation could not be deleted.\n\033[0m";
         return;
     }
 
@@ -407,7 +401,7 @@ void cancelReservation()
     // Step 9: Persist updated sailing data with restored capacity
     updateSailing(sailingRecord);
 
-    cout << "\nCancelation Successful\n";
+    cout << "\n\033[32mCancelation Successful\033[0m\n";
 }
 
 //-----------------------------------------------
@@ -419,14 +413,14 @@ void checkInReservation()
     while (true)  // Loop goal: process multiple check-ins until user exits
     {
         // Step 1: Display check-in interface and collect vehicle information
-        cout << "\n[CHECK-IN VEHICLE]" << endl;
-        cout << "-------------------------------------------------------------------------------" << endl;
-        
+        cout << "\n\033[94m[\033[1;96mCHECK-IN VEHICLE\033[94m]" << endl;
+        cout << "\033[94m-------------------------------------------------------------------------------\033[0m" << endl;
+
         // Clear input buffer (same as cancelReservation)
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
-        cout << "Enter Vehicle Plate Number (max 10 characters) or [0] to exit: ";
+        cout << "\033[1;97mEnter Vehicle Plate Number (max 10 characters) or [0] to exit: \033[0m";
         cin >> licensePlate;
 
         // Exit condition check
@@ -436,24 +430,18 @@ void checkInReservation()
         }
 
         // Step 2: Collect sailing information for reservation lookup
-        cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+        cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
         cin >> sailingID;
-
-        // Debug output to verify the values (same as cancelReservation)
-        cout << "Debug - licensePlate: '" << licensePlate << "'" << endl;
-        cout << "Debug - sailingID: '" << sailingID << "'" << endl;
 
         // Step 3: Generate reservation ID for database lookup
         char reservationID[21];
         makeReservationID(licensePlate, sailingID, reservationID);
 
-        cout << "Debug - reservationID: '" << reservationID << "'" << endl;
-
         // Retrieve reservation using composite key (same method as cancelReservation)
         optional<Reservation> reservationOpt = getReservationByID(reservationID);
         if (!reservationOpt)  // Reservation not found
         {
-            cout << "Error: Reservation not found\n";
+            cout << "\033[31mError: Reservation not found\n\033[0m";
             continue;  // Continue to next iteration for another vehicle
         }
 
@@ -462,7 +450,7 @@ void checkInReservation()
         // Step 4: Validate check-in eligibility - prevent double check-in
         if (reservationRecord.onboard)  // Vehicle already checked in
         {
-            cout << "Error: Customer already checked-in\n";
+            cout << "\033[31mError: Customer already checked-in\n\033[0m";
             continue;  // Continue to next iteration
         }
 
@@ -482,15 +470,15 @@ void checkInReservation()
         }
 
         // Step 6: Display calculated fare to user
-        cout << "Collect $" << calculatedFare << endl;
+        cout << "\033[32mCollect $" << calculatedFare << endl;
 
         // Step 7: Update reservation status to indicate successful check-in
         if (!setOnboardStatus(reservationID, true))  // Status update failed
         {
-            cout << "Error: Failed to update onboard status\n";
+            cout << "\033[31mError: Failed to update onboard status\n\033[0m";
             continue;  // Continue to next iteration
         }
 
-        cout << "\nCheck-in Successful\n";
+        cout << "\n\033[32mCheck-in Successful\033[0m\n";
     }
 }

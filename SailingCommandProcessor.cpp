@@ -28,19 +28,20 @@
 // Purpose:  Prompts user to create a new sailing.
 void createSailing()
 {
-    std::cout << "\n[CREATE NEW SAILING]\n"
-              << "-------------------------------------------\n";
+    std::cout << "\n\033[94m[\033[96mCREATE NEW SAILING\033[94m]\n"
+              << "\033[94m-------------------------------------------\n";
     // ─── Eat one leftover newline (from previous cin>> or getline) ───
     if (std::cin.peek() == '\n')
         std::cin.get();
 
     // 1) Prompt for vessel name
     char vesselName[26];
-    std::cout << "Enter Vessel Name (max 25 characters): ";
+    std::cout << "\033[1;97mEnter Vessel Name (max 25 characters): \033[0m";
     std::cin.getline(vesselName, sizeof(vesselName));
     if (!std::cin || vesselName[0] == '\0') {
         std::cin.clear();
-        std::cout << "Error: no vessel name entered\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the entire input buffer
+        std::cout << "\033[31mError: no vessel name entered\n\033[0m";
         return;
     }
 
@@ -48,38 +49,41 @@ void createSailing()
     auto vesselOpt = getVesselByName(vesselName);
     if (!vesselOpt.has_value())
     {
-        std::cout << "Error: Vessel not found\n";
+        std::cout << "\033[31mError: Vessel not found\n\033[0m";
         return;
     }
     Vessel vesselUsed = vesselOpt.value();
 
     // 3) Prompt for terminal
     char terminal[4]; // 3 char for ferry code + null terminator
-    std::cout << "Enter Departure Terminal (3 character ferry code): ";
+    std::cout << "\033[1;97mEnter Departure Terminal (3 character ferry code): \033[0m";
     std::cin.getline(terminal, sizeof(terminal));
     if (!std::cin || std::strlen(terminal) != 3) {
         std::cin.clear();
-        std::cout << "Error: Invalid terminal code\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the entire input buffer
+        std::cout << "\033[31mError: Invalid terminal code\n\033[0m";
         return;
     }
 
     // 4) Prompt for departure date
-    char departureDate[3];
-    std::cout << "Enter Departure Date (2 digits): ";
+    char departureDate[4]; // Changed from 3 to 4 to allow for overflow detection
+    std::cout << "\033[1;97mEnter Departure Date (2 digits): \033[0m";
     std::cin.getline(departureDate, sizeof(departureDate));
     if (!std::cin || std::strlen(departureDate) != 2 || !isdigit(departureDate[0]) || !isdigit(departureDate[1])) {
         std::cin.clear();
-        std::cout << "Error: Invalid date format\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[31mError: Invalid date format\n\033[0m";
         return;
     }
 
-
     // 5) Prompt for departure time
-    char departureTime[3];
-    std::cout << "Enter Departure Time (2 digits): ";
+    char departureTime[4]; // Changed from 3 to 4 to allow for overflow detection
+    std::cout << "\033[1;97mEnter Departure Time (2 digits): \033[0m";
     std::cin.getline(departureTime, sizeof(departureTime));
     if (!std::cin || std::strlen(departureTime) != 2 || !isdigit(departureTime[0]) || !isdigit(departureTime[1])) {
         std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[31mError: Invalid time format\n\033[0m";
         return;
     }
 
@@ -89,7 +93,7 @@ void createSailing()
     std::snprintf(sailingID, sizeof(sailingID), "%s-%s-%s", terminal, departureDate, departureTime);
     if (getSailingByID(sailingID))
     {
-        std::cout << "Error: Sailing ID conflict\n";
+        std::cout << "\033[31mError: Sailing ID conflict\n\033[0m";
         return;
     }
 
@@ -109,17 +113,17 @@ void createSailing()
         newSailing.LRL = vessel.lowCap;
         newSailing.HRL = vessel.highCap;
     } else {
-        std::cout << "Error: Vessel lookup failed during sailing creation\n";
+        std::cout << "\033[31mError: Vessel lookup failed during sailing creation\n\033[0m";
         return;
     }
     if (!addSailing(newSailing))
     {
-        std::cout << "Error: Failed to create sailing.\n";
+        std::cout << "\033[31mError: Failed to create sailing.\n\033[0m";
         return;
     }
 
     // 8) Confirmation
-    std::cout << "Sailing Created\n";
+    std::cout << "\033[32mSailing Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -133,11 +137,12 @@ void deleteSailing()
 
     // 1) Prompt for sailing ID
     char sailingID[25];
-    std::cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+    std::cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     std::cin.getline(sailingID, sizeof(sailingID));
     if (!std::cin || std::strlen(sailingID) != 9) {
         std::cin.clear();
-        std::cout << "Error: No sailing ID entered\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the entire input buffer
+        std::cout << "\033[31mError: No sailing ID entered\n\033[0m";
         return;
     }
 
@@ -147,30 +152,30 @@ void deleteSailing()
         !isdigit(sailingID[4]) || !isdigit(sailingID[5]) ||  // Departure Date must be 2 numeric digits
         !isdigit(sailingID[7]) || !isdigit(sailingID[8]))   // Departure Hour must be 2 numeric digits
     {
-        std::cout << "Error: Sailing ID not named correctly\n";
+        std::cout << "\033[31mError: Sailing ID not named correctly\n\033[0m";
         return;
     }
     // 3) Validate sailing existence
     if (!getSailingByID(sailingID))
     {
-        std::cout << "Error: Sailing not found\n";
+        std::cout << "\033[31mError: Sailing not found\n\033[0m";
         return;
     }
     // 4) Delete reservations associated with the sailing
     if (!deleteReservationsBySailingID(sailingID))
     {
-        std::cout << "Error: Failed to delete reservations\n";
+        std::cout << "\033[31mError: Failed to delete reservations\n\033[0m";
         return;
     }
     // 5) Delete the sailing record
     if (!deleteSailing(sailingID))
     {
-        std::cout << "Error: Failed to delete sailing\n";
+        std::cout << "\033[31mError: Failed to delete sailing\n\033[0m";
         return;
     }
 
     // Confirmation (Updated message as per your request)
-    std::cout << "Sailing Canceled\n";
+    std::cout << "\033[32mSailing Canceled\n\033[0m";
 }
 
 //------------------------------------------------------------------------
@@ -186,7 +191,7 @@ void viewSailingReport()
 
     if (totalSailings == 0)
     {
-        std::cout << "Error: No sailing records found\n";
+        std::cout << "\033[31mError: No sailing records found\n\033[0m";
         return; // No sailings in the system
     }
 
@@ -199,15 +204,15 @@ void viewSailingReport()
 
     while (loadMore && totalSailings > index) {
         // Print report header with current date and time
-        std::cout << "\n[VIEW SAILING REPORT]" << std::endl;
+        std::cout << "\n\033[32m[VIEW SAILING REPORT]" << std::endl;
         std::cout << std::string(79, '-') << std::endl;
-        std::cout << "    Date: " << std::put_time(localTime, "%y-%m-%d") << "      |      Time: " << std::put_time(localTime, "%H:%M") << std::endl;
+        std::cout << "     Date: " << std::put_time(localTime, "%y-%m-%d") << "      |      Time: " << std::put_time(localTime, "%H:%M") << std::endl;
         std::cout << std::string(79, '-') << std::endl;
 
         // Set up table headers with proper alignment
         std::cout << std::left
-             << std::setw(4)  << "#"
-             << std::setw(27) << "Vessel Name"
+             << std::setw(5)  << "#"     // Changed from 4 to 5
+             << std::setw(26) << "Vessel Name"  // Changed from 27 to 26
              << std::setw(12) << "Sailing ID"
              << std::right
              << std::setw(10) << "LRL(m)"
@@ -239,8 +244,8 @@ void viewSailingReport()
                     CF = ((totalCapacity - remainingCapacity) / totalCapacity) * 100;
                 }
             }
-            std::cout << std::setw(1) << (index + 1) << ")  "
-                      << std::left  << std::setw(27) << s.vesselName
+            std::cout << std::setw(2) << (index + 1) << ")  "  // Changed from setw(1) to setw(2)
+                      << std::left  << std::setw(26) << s.vesselName  // Changed from 27 to 26
                       << std::setw(12)   << s.id
                       << std::fixed  << std::right
                       << std::setw(10)   << std::setprecision(1) << s.LRL
@@ -255,7 +260,7 @@ void viewSailingReport()
         // Check if there are more sailings to display
         if (index < totalSailings) {
             // Prompt user to load more sailings
-            std::cout << "Load More? [y/n]: ";
+            std::cout << "\033[1;97mLoad More? [y/n]: \033[0m";
             char input;
             std::cin >> input;
             std::cout << std::endl;
@@ -266,13 +271,13 @@ void viewSailingReport()
             }
             else if (input != 'y')
             {
-                std::cout << "Error: Invalid input, exiting report." << std::endl;
+                std::cout << "\033[31mError: Invalid input, exiting report.\033[0m" << std::endl;
                 return; // Invalid input
             }
 
             if (index >= totalSailings)
             {
-                std::cout << "Error: End of sailing records\n";
+                std::cout << "\033[31mError: End of sailing records\n\033[0m";
                 return; // End of sailing records
             }
         }
@@ -288,12 +293,12 @@ void viewSailingReport()
 void findSailingByID()
 {
     // Display the filter sailing report prompt
-    std::cout << "\n[FILTER SAILING REPORT]\n";
-    std::cout << "-------------------------------------------\n";
+    std::cout << "\n\033[96m[\033[1;96mFILTER SAILING REPORT\033[96m]\n";
+    std::cout << "\033[94m-------------------------------------------\n";
 
     // Use a fixed-size char array instead of std::string for Sailing ID
     char sailingID[11];  // 10 characters + null terminator
-    std::cout << "Enter Sailing ID (format: XXX-DD-HH): ";
+    std::cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     std::cin >> sailingID;
 
     // Check for valid Sailing ID format
@@ -302,7 +307,7 @@ void findSailingByID()
         !isdigit(sailingID[4]) || !isdigit(sailingID[5]) || 
         !isdigit(sailingID[7]) || !isdigit(sailingID[8]))
     {
-        std::cout << "Error: Sailing ID not named correctly\n";
+        std::cout << "\033[31mError: Sailing ID not named correctly\n\033[0m";
         return; // Return to the main menu after error
     }
 
@@ -312,12 +317,12 @@ void findSailingByID()
     // Check if sailing exists
     if (!sailing)
     {
-        std::cout << "Error: No sailings found matching your criteria\n";
+        std::cout << "\033[31mError: No sailings found matching your criteria\n\033[0m";
         return; // Return to the main menu if not found
     }
 
     // Display the Sailing Information in the correct format
-    std::cout << "\n[SAILING REPORT]\n";
+    std::cout << "\n\033[32m[SAILING REPORT]\n";
     std::cout << std::string(79, '-') << std::endl
               << std::left
               << std::setw(4)  << "#"
@@ -364,13 +369,13 @@ void findSailingByID()
               << "\n";
     
     // Ask user if they want to return to the main menu
-    std::cout << "\nEnter [0] to return to Sub Menu: ";
+    std::cout << "\n\033[1;97mEnter [0] to return to Sub Menu: \033[0m";
     int choice;
     std::cin >> choice;
 
     if (choice != 0)
     {
-        std::cout << "Error: Invalid input\n";
+        std::cout << "\033[31mError: Invalid input\n\033[0m";
     }
     else
     {
