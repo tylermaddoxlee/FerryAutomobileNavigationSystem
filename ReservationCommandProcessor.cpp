@@ -52,7 +52,7 @@ void createReservationForRegisteredVehicle()
     auto existingVehicleOpt = getVehicleByLicensePlate(licensePlate);
     if (!existingVehicleOpt)  // Vehicle not found in registered database
     {
-        cout << "\033[31mError: License plate not found\n\033[0m";
+        cout << "\033[31mError: License plate not in system\n\033[0m";
         return;
     }
     vehicleRecord = *existingVehicleOpt;  // Extract vehicle data from optional
@@ -100,7 +100,7 @@ void createReservationForRegisteredVehicle()
         } 
         else  // No lane has sufficient remaining capacity
         {
-            cout << "\033[31mError: No sufficient capacity in either lane\n\033[0m";
+            cout << "\033[31mError: Remaining capacity is not enough for vehicle size\n\033[0m";
             return;
         }
     } 
@@ -112,7 +112,7 @@ void createReservationForRegisteredVehicle()
         } 
         else  // High lane insufficient for tall vehicle
         {
-            cout << "\033[31mError: Not enough capacity in the high lane\n\033[0m";
+            cout << "\033[31mError: Remaining capacity is not enough for vehicle size\n\033[0m";
             return;
         }
     }
@@ -224,7 +224,7 @@ void createReservationForUnregisteredVehicle()
         } 
         else  // Neither lane has sufficient capacity
         {
-            cout << "\033[31mError: No sufficient capacity in either lane\n\033[0m";
+            cout << "\033[31mError: Remaining capacity is not enough for vehicle size\n\033[0m";
             return;
         }
     } 
@@ -236,7 +236,7 @@ void createReservationForUnregisteredVehicle()
         } 
         else  // High lane insufficient for overheight vehicle
         {
-            cout << "\033[31mError: Not enough capacity in the high lane\n\033[0m";
+            cout << "\033[31mError: Remaining capacity is not enough for vehicle size\n\033[0m";
             return;
         }
     }
@@ -305,7 +305,7 @@ void createReservation()
     while (true)  // Loop goal: obtain valid yes/no response from user
     {
         cout << "\n\033[94m[\033[1;96mCREATE NEW RESERVATION\033[94m]\033[0m" << endl;
-        cout << "\033[94m-------------------------------------------------------------------------------" << endl;
+        cout << "\033[94m-------------------------------------------------------------------------------\033[0m" << endl;
         std::cout << "\033[1;97mHave You Made a Reservation with this License Plate [y/n]: \033[0m";
         std::cin >> userResponse;
         userResponse = static_cast<char>(std::tolower(userResponse));  // Convert to lowercase for comparison
@@ -336,7 +336,7 @@ void cancelReservation()
 
     // Step 1: Collect reservation identification information
     cout << "\n\033[94m[\033[1;96mDELETE EXISTING RESERVATION\033[94m]\033[0m" << endl;
-    cout << "\033[94m-------------------------------------------------------------------------------" << endl;
+    cout << "\033[94m-------------------------------------------------------------------------------\033[0m" << endl;
     
     // Clear input buffer
     cin.clear();

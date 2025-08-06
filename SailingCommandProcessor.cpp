@@ -29,7 +29,7 @@
 void createSailing()
 {
     std::cout << "\n\033[94m[\033[96mCREATE NEW SAILING\033[94m]\n"
-              << "\033[94m-------------------------------------------\n";
+              << "\033[94m-------------------------------------------------------------------------------\n";
     // ─── Eat one leftover newline (from previous cin>> or getline) ───
     if (std::cin.peek() == '\n')
         std::cin.get();
@@ -123,7 +123,7 @@ void createSailing()
     }
 
     // 8) Confirmation
-    std::cout << "\033[32mSailing Created\n\033[0m";
+    std::cout << "\n\033[32mSailing Created\n\033[0m";
 }
 
 //-----------------------------------------------
@@ -137,6 +137,8 @@ void deleteSailing()
 
     // 1) Prompt for sailing ID
     char sailingID[25];
+    std::cout << "\n\033[94m[\033[96mDELETE EXISTING SAILING\033[94m]\n"
+              << "\033[94m-------------------------------------------------------------------------------\n";
     std::cout << "\033[1;97mEnter Sailing ID (format: XXX-DD-HH): \033[0m";
     std::cin.getline(sailingID, sizeof(sailingID));
     if (!std::cin || std::strlen(sailingID) != 9) {
@@ -271,7 +273,7 @@ void viewSailingReport()
             }
             else if (input != 'y')
             {
-                std::cout << "\033[31mError: Invalid input, exiting report.\033[0m" << std::endl;
+                std::cout << "\033[31mError: Invalid input\033[0m" << std::endl;
                 return; // Invalid input
             }
 
@@ -294,7 +296,7 @@ void findSailingByID()
 {
     // Display the filter sailing report prompt
     std::cout << "\n\033[96m[\033[1;96mFILTER SAILING REPORT\033[96m]\n";
-    std::cout << "\033[94m-------------------------------------------\n";
+    std::cout << "\033[94m-------------------------------------------------------------------------------\n";
 
     // Use a fixed-size char array instead of std::string for Sailing ID
     char sailingID[11];  // 10 characters + null terminator
