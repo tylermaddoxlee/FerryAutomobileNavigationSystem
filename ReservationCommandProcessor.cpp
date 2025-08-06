@@ -85,14 +85,16 @@ void createReservationForRegisteredVehicle()
 
     // Step 5: Implement lane assignment algorithm based on vehicle dimensions
     Lane assignedLane;
+    float vehicleWithBuffer = vehicleRecord.vehicleLength + 0.5;
+
     if (vehicleRecord.vehicleHeight <= 2)  // Vehicle can use either lane
     {
         // Priority algorithm: try low lane first, then high lane
-        if (sailingRecord.LRL >= vehicleRecord.vehicleLength)  // Low lane has capacity
+        if (sailingRecord.LRL >= vehicleWithBuffer)  // Low lane has capacity
         {
             assignedLane = Lane::LOW;
         } 
-        else if (sailingRecord.HRL >= vehicleRecord.vehicleLength)  // High lane has capacity
+        else if (sailingRecord.HRL >= vehicleWithBuffer)  // High lane has capacity
         {
             assignedLane = Lane::HIGH;
         } 
@@ -104,7 +106,7 @@ void createReservationForRegisteredVehicle()
     } 
     else  // Tall vehicle (>2m) must use high lane only
     {
-        if (sailingRecord.HRL >= vehicleRecord.vehicleLength)  // High lane capacity check
+        if (sailingRecord.HRL >= vehicleWithBuffer)  // High lane capacity check
         {
             assignedLane = Lane::HIGH;
         } 
@@ -135,11 +137,11 @@ void createReservationForRegisteredVehicle()
     // Step 7: Update sailing capacity based on successful reservation
     if (assignedLane == Lane::LOW)  // Update low lane remaining capacity
     {
-        sailingRecord.LRL -= vehicleRecord.vehicleLength;
+        sailingRecord.LRL -= vehicleWithBuffer;
     } 
     else  // Update high lane remaining capacity
     {
-        sailingRecord.HRL -= vehicleRecord.vehicleLength;
+        sailingRecord.HRL -= vehicleWithBuffer;
     }
 
     sailingRecord.reservationsCount++;  // Increment total reservation counter
@@ -197,16 +199,19 @@ void createReservationForUnregisteredVehicle()
     cout << "Enter Vehicle Height (max 9.9m): ";
     cin >> tempVehicle.vehicleHeight;
 
+    // Add 0.5-meter buffer for vehicle length
+    float vehicleWithBuffer = tempVehicle.vehicleLength + 0.5;
+
     // Step 5: Apply lane assignment algorithm based on collected dimensions
     Lane assignedLane;
     if (tempVehicle.vehicleHeight <= 2)  // Standard height vehicle - can use either lane
     {
         // Priority-based assignment: prefer low lane, fallback to high lane
-        if (sailingRecord.LRL >= tempVehicle.vehicleLength)  // Low lane available
+        if (sailingRecord.LRL >= vehicleWithBuffer)  // Low lane available
         {
             assignedLane = Lane::LOW;
         } 
-        else if (sailingRecord.HRL >= tempVehicle.vehicleLength)  // High lane available
+        else if (sailingRecord.HRL >= vehicleWithBuffer)  // High lane available
         {
             assignedLane = Lane::HIGH;
         } 
@@ -218,7 +223,7 @@ void createReservationForUnregisteredVehicle()
     } 
     else  // Overheight vehicle - high lane only
     {
-        if (sailingRecord.HRL >= tempVehicle.vehicleLength)  // High lane capacity check
+        if (sailingRecord.HRL >= vehicleWithBuffer)  // High lane capacity check
         {
             assignedLane = Lane::HIGH;
         } 
@@ -255,11 +260,11 @@ void createReservationForUnregisteredVehicle()
     // Step 8: Update sailing capacity after successful reservation creation
     if (assignedLane == Lane::LOW)  // Deduct from low lane capacity
     {
-        sailingRecord.LRL -= tempVehicle.vehicleLength;
+        sailingRecord.LRL -= vehicleWithBuffer;
     } 
     else  // Deduct from high lane capacity
     {
-        sailingRecord.HRL -= tempVehicle.vehicleLength;
+        sailingRecord.HRL -= vehicleWithBuffer;
     }
 
     sailingRecord.reservationsCount++;  // Increment reservation counter
@@ -352,14 +357,16 @@ void cancelReservation()
     Sailing sailingRecord = *sailingOpt;
 
     // Step 6: Restore sailing capacity by adding back canceled vehicle's space
-    if (reservationRecord.reservedLane == Lane::LOW)  // Add back to low lane
-    {
-        sailingRecord.LRL += reservationRecord.vehicleLength;
-    } 
-    else  // Add back to high lane
-    {
-        sailingRecord.HRL += reservationRecord.vehicleLength;
-    }
+    const float buffer = 0.5f;  // 0.5 meter buffer
+        
+        if (reservationRecord.reservedLane == Lane::LOW)  // Add back to low lane
+        {
+            sailingRecord.LRL += (reservationRecord.vehicleLength + buffer);  // Add the vehicle length + buffer
+        } 
+        else  // Add back to high lane
+        {
+            sailingRecord.HRL += (reservationRecord.vehicleLength + buffer);  // Add the vehicle length + buffer
+        }
 
     // Step 7: Remove reservation record from persistent storage
     if (!deleteReservation(reservationRecord.licensePlate))  // Deletion operation failed
