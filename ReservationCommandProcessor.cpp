@@ -41,7 +41,7 @@ void createReservationForRegisteredVehicle()
     Vehicle vehicleRecord;          // stores retrieved vehicle data from database
     Reservation newReservation;     // reservation record to be created
     Sailing sailingRecord;          // sailing data for capacity checking
-    char sailingID[9];              // sailing identifier in format XXX-DD-HH
+    char sailingID[11];              // sailing identifier in format XXX-DD-HH
     char licensePlate[11];          // vehicle license plate number
 
     // Step 1: Collect license plate and validate vehicle registration
@@ -53,7 +53,6 @@ void createReservationForRegisteredVehicle()
     if (!existingVehicleOpt)  // Vehicle not found in registered database
     {
         cout << "Error: License plate not found\n";
-
         return;
     }
     vehicleRecord = *existingVehicleOpt;  // Extract vehicle data from optional
@@ -62,9 +61,20 @@ void createReservationForRegisteredVehicle()
     cout << "Enter Sailing ID (format: XXX-DD-HH): ";
     cin >> sailingID;
 
-    // Step 3: Generate composite reservation ID using concatenation algorithm
-    char reservationID[21] = {0};  // buffer for combined ID string
-    snprintf(reservationID, sizeof(reservationID), "%s%s", licensePlate, sailingID);
+    // Step 3: Retrieve and validate sailing data for capacity checking
+    auto sailingOpt = getSailingByID(sailingID);
+    if (!sailingOpt)  // Invalid sailing ID provided
+    {
+        cout << "Error: Sailing ID does not exist\n";
+        return;
+    }
+    sailingRecord = *sailingOpt;
+
+    // Step 4: Generate composite reservation ID using concatenation algorithm
+    char reservationID[21];
+    makeReservationID(licensePlate, sailingID, reservationID);
+
+    cout << "Debug - reservationID: '" << reservationID << "'" << endl;
 
     // Check for duplicate reservation to prevent double-booking
     auto existingReservationOpt = getReservationByID(reservationID);
@@ -74,14 +84,6 @@ void createReservationForRegisteredVehicle()
         return;
     }
 
-    // Step 4: Retrieve and validate sailing data for capacity checking
-    auto sailingOpt = getSailingByID(sailingID);
-    if (!sailingOpt)  // Invalid sailing ID provided
-    {
-        cout << "Error: Sailing ID does not exist\n";
-        return;
-    }
-    sailingRecord = *sailingOpt;
 
     // Step 5: Implement lane assignment algorithm based on vehicle dimensions
     Lane assignedLane;
@@ -117,14 +119,23 @@ void createReservationForRegisteredVehicle()
         }
     }
 
-    // Step 6: Populate reservation record with collected and calculated data
+    // Step 6: Construct reservation record with collected data
     snprintf(newReservation.id, sizeof(newReservation.id), "%s", reservationID);
+    
+    // Zero out destination arrays before copying to ensure no garbage data
+    memset(newReservation.licensePlate, 0, sizeof(newReservation.licensePlate));
+    memset(newReservation.sailingID, 0, sizeof(newReservation.sailingID));
+    memset(newReservation.phone, 0, sizeof(newReservation.phone));
+    
     strncpy(newReservation.licensePlate, licensePlate, sizeof(newReservation.licensePlate) - 1);
     strncpy(newReservation.sailingID, sailingID, sizeof(newReservation.sailingID) - 1);
+    strncpy(newReservation.phone, vehicleRecord.phone, sizeof(newReservation.phone) - 1);
+    
     newReservation.vehicleLength = vehicleRecord.vehicleLength;  // Copy from registered vehicle
     newReservation.vehicleHeight = vehicleRecord.vehicleHeight;  // Copy from registered vehicle
-    strncpy(newReservation.phone, vehicleRecord.phone, sizeof(newReservation.phone) - 1);
-    newReservation.onboard = false;  // Initial check-in status is false
+    newReservation.onboard = false;  // Initial onboard status
+
+    newReservation.expectedReturnDate = {0, 0, 0}; 
     newReservation.reservedLane = assignedLane;  // Store calculated lane assignment
 
     // Attempt to persist reservation to storage
@@ -160,7 +171,7 @@ void createReservationForUnregisteredVehicle()
     Sailing sailingRecord;          // sailing data for capacity validation
     char sailingID[11];              // sailing identifier
     char licensePlate[11];          // vehicle license plate
-    char phoneNumber[15];           // contact phone number
+    char phoneNumber[13];           // contact phone number
 
     // Step 1: Collect and validate sailing information first
     cout << "Enter Sailing ID (format: XXX-DD-HH): ";
@@ -271,6 +282,21 @@ void createReservationForUnregisteredVehicle()
 
     // Persist updated sailing data
     updateSailing(sailingRecord);
+
+    // Step 10: Add vehicle to vehicle database for future use
+    // Populate tempVehicle with all collected information
+    memset(tempVehicle.licensePlate, 0, sizeof(tempVehicle.licensePlate));
+    memset(tempVehicle.phone, 0, sizeof(tempVehicle.phone));
+    
+    strncpy(tempVehicle.licensePlate, licensePlate, sizeof(tempVehicle.licensePlate) - 1);
+    strncpy(tempVehicle.phone, phoneNumber, sizeof(tempVehicle.phone) - 1);
+    // vehicleLength and vehicleHeight already set above
+
+    // Add vehicle to database (ignore failure - reservation is already created)
+    if (!addVehicle(tempVehicle))
+    {
+        cout << "Warning: Vehicle could not be added to database, but reservation was created successfully.\n";
+    }
 
     cout << "\nReservation Created.\n";
 }

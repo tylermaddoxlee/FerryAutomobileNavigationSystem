@@ -67,19 +67,20 @@ std::optional<Vehicle> getVehicleByLicensePlate(
     const std::string &licensePlate
 )
 {
-	if (!vehicleFile.is_open()) return nullopt;
+    if (!vehicleFile.is_open()) return nullopt;
 
-	vehicleFile.clear();
-	vehicleFile.seekg(0, ios::beg);
+    vehicleFile.clear();
+    vehicleFile.seekg(0, ios::beg);
 
-	Vehicle temp;
-	while (vehicleFile.read(reinterpret_cast<char*>(&temp), sizeof(Vehicle))) {
-		if (licensePlate == temp.licensePlate) {
-			return temp;
-		}
-	}
+    Vehicle temp;
+    while (vehicleFile.read(reinterpret_cast<char*>(&temp), sizeof(Vehicle))) {
+        // Use strncmp to compare C-style strings safely
+        if (strncmp(licensePlate.c_str(), temp.licensePlate, sizeof(temp.licensePlate)) == 0) {
+            return temp;
+        }
+    }
 
-	return nullopt;
+    return nullopt;
 }
 //linear search through binary vehicle file to find a 
 //vehicle with a matching license plate
