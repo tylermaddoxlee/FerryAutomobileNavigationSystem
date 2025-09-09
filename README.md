@@ -20,5 +20,5 @@ Within the team project, I worked on:
 - Git (version control)  
 
 ## Credits
-This repository is a fork of the original team project: [BLA179/CMPT-276](https://github.com/original-owner/repo-name).  
+This repository is a fork of the original team project: [BLA179/CMPT-276](https://github.com/BLA179/CMPT-276).  
 Developed collaboratively by a 4-person team. 
